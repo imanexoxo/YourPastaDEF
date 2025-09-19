@@ -1,0 +1,73 @@
+# Compiled output
+IngSW2025-FE/dist/
+IngSW2025-FE/tmp/
+IngSW2025-FE/out-tsc/
+YourPastaBE/build/
+YourPastaBE/.gradle/
+
+# Node modules
+IngSW2025-FE/node_modules/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Angular specific
+IngSW2025-FE/.angular/
+IngSW2025-FE/.nx/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Java specific
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Gradle Wrapper
+!YourPastaBE/gradle/wrapper/gradle-wrapper.jar
+!YourPastaBE/gradle/wrapper/gradle-wrapper.properties
+
+# Spring Boot
+YourPastaBE/*.jar
+YourPastaBE/*.orig
+YourPastaBE/spring.log
+
+# IntelliJ
+YourPastaBE/.idea/
+YourPastaBE/*.iws
+YourPastaBE/*.iml
+YourPastaBE/*.ipr
+YourPastaBE/out/
+
+# Eclipse
+YourPastaBE/.apt_generated
+YourPastaBE/.classpath
+YourPastaBE/.factorypath
+YourPastaBE/.project
+YourPastaBE/.settings
+YourPastaBE/.springBeans
+YourPastaBE/.sts4-cache

@@ -1,0 +1,95 @@
+<div class="piatti-container">
+  
+  <!-- Header della pagina -->
+  <div class="header-section">
+    <h2><mat-icon>restaurant_menu</mat-icon> {{ titoloPagina }}</h2>
+    <p class="subtitle" *ngIf="!isLoading">{{ piatti.length }} piatti disponibili</p>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="loading-section">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Caricamento piatti...</p>
+  </div>
+
+  <!-- Griglia dei piatti - STILE HOME -->
+  <div *ngIf="!isLoading && piatti.length > 0" class="piatti-list">
+    <div class="piatto-container" *ngFor="let piatto of piatti" (click)="onPiattoClick(piatto)">
+      
+      <!-- Immagini degli ingredienti seamless (IDENTICO ALLA HOME) -->
+      <div class="ingredienti-images">
+        <img *ngFor="let immagine of getImmaginiIngredienti(piatto)" 
+             [src]="immagine" 
+             [alt]="'Ingrediente'"
+             class="ingrediente-image"
+             (error)="onImageError($event)">
+      </div>
+      
+      <!-- Card rossa del piatto (IDENTICO ALLA HOME) -->
+      <mat-card class="piatto-card-red">
+        <mat-card-content>
+          <h4 class="piatto-nome">{{ piatto.nome }}</h4>
+          <p class="piatto-utente" *ngIf="vistaCorrente === 'piatti-altri-utenti' || !utenteLoggato">by {{ getNomeUtenteCreatore(piatto) }}</p>
+          <div class="ingredienti-list">
+            <p *ngFor="let ingrediente of getNomiIngredienti(piatto)" class="ingrediente-item">
+              {{ ingrediente }}
+            </p>
+          </div>
+          <div class="piatto-footer">
+            <p class="prezzo">
+              <!-- Se è uno studente, mostra il prezzo originale barrato e quello scontato -->
+              <span *ngIf="isUtenteStudente()" class="prezzo-container">
+                <span class="prezzo-originale">€{{ getPrezzoOriginale(piatto) | number:'1.2-2' }}</span>
+                <span class="prezzo-scontato">€{{ getPrezzoScontato(piatto) | number:'1.2-2' }}</span>
+              </span>
+              <!-- Se non è uno studente, mostra solo il prezzo normale -->
+              <span *ngIf="!isUtenteStudente()">€{{ piatto.prezzo | number:'1.2-2' }}</span>
+            </p>
+            <!-- Se l'utente è loggato, mostra il bottone aggiungi al carrello -->
+            <button *ngIf="utenteLoggato" 
+                    mat-raised-button 
+                    color="primary" 
+                    (click)="aggiungiPiattoAlCarrello(piatto, $event)" 
+                    class="add-to-cart-btn">
+              <mat-icon>add_shopping_cart</mat-icon>
+            </button>
+            <!-- Se l'utente non è loggato, mostra i link login/signup -->
+            <div *ngIf="!utenteLoggato" class="login-message">
+              <p class="login-text">
+                <a routerLink="/login" class="login-link">Accedi</a> 
+                o 
+                <a routerLink="/signin" class="login-link">registrati</a> 
+                per ordinare
+              </p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Messaggio nessun piatto trovato -->
+  <div *ngIf="!isLoading && piatti.length === 0" class="no-piatti">
+    <mat-icon>restaurant_menu</mat-icon>
+    <h3>Nessun piatto trovato</h3>
+    
+    <p *ngIf="vistaCorrente === 'miei-piatti'">
+      Non hai ancora creato nessun piatto.
+    </p>
+    <p *ngIf="vistaCorrente === 'piatti-altri-utenti'">
+      Non ci sono ancora piatti creati da altri utenti.
+    </p>
+    <p *ngIf="vistaCorrente === 'tutti-piatti'">
+      Non ci sono piatti disponibili al momento.
+    </p>
+    
+    <button *ngIf="utenteLoggato" 
+            mat-raised-button 
+            color="primary"
+            routerLink="/crea-ordine">
+      <mat-icon>add</mat-icon>
+      Crea il tuo primo piatto
+    </button>
+  </div>
+
+</div>

@@ -1,0 +1,214 @@
+<div class="storico-container">
+  <h2 *ngIf="!adminMode">I tuoi Ordini</h2>
+  
+  <div *ngIf="ordini.length === 0" class="no-ordini">
+    <mat-card>
+      <mat-card-content>
+        <div class="empty-state">
+          <mat-icon>restaurant_menu</mat-icon>
+          <h3>Nessun ordine trovato</h3>
+          <p>Non hai ancora effettuato nessun ordine. Inizia a creare il tuo piatto personalizzato!</p>
+          <button mat-raised-button color="primary" routerLink="/home">
+            Torna alla Home
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Lista degli ordini con card -->
+  <div *ngIf="ordini.length > 0" class="ordini-grid">
+    <mat-card *ngFor="let ordine of ordini" class="ordine-card" (click)="visualizzaDettagli(ordine)">
+      <mat-card-header>
+        <div class="ordine-header-content">
+          <div class="ordine-id-section">
+            <mat-icon>receipt</mat-icon>
+            <span class="ordine-id">Ordine #{{ ordine.id }}</span>
+          </div>
+          <div class="stato-section">
+            <span class="stato-badge" [ngClass]="'stato-' + ordine.status">
+              {{ ordine.status | titlecase }}
+            </span>
+          </div>
+        </div>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="ordine-info-grid">
+          <div class="info-item">
+            <mat-icon>event</mat-icon>
+            <div class="info-content">
+              <span class="info-label">Data</span>
+              <span class="info-value">{{ formatDate(ordine.dataOrdine!) }}</span>
+            </div>
+          </div>
+          
+          <div class="info-item">
+            <mat-icon>{{ ordine.delivery ? 'delivery_dining' : 'table_restaurant' }}</mat-icon>
+            <div class="info-content">
+              <span class="info-label">{{ ordine.delivery ? 'Delivery' : 'Modalità' }}</span>
+              <span class="info-value">{{ getTavoloOAsporto(ordine) }}</span>
+            </div>
+          </div>
+          
+          <div class="info-item">
+            <mat-icon>euro</mat-icon>
+            <div class="info-content">
+              <span class="info-label">Totale</span>
+              <span class="info-value prezzo">{{ ordine.prezzoTotale | currency:'EUR' }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Anteprima items dell'ordine -->
+        <div class="items-preview" *ngIf="!caricamentoDettagli">
+          <div class="preview-header">
+            <mat-icon>restaurant</mat-icon>
+            <span>Contenuto ordine</span>
+            <mat-icon class="expand-icon">expand_more</mat-icon>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<!-- Modal Dettagli Ordine -->
+<div *ngIf="ordineSelezionato" class="modal-overlay" (click)="chiudiDettagli()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="header-content">
+        <mat-icon>receipt</mat-icon>
+        <h3>Ordine #{{ ordineSelezionato.id }}</h3>
+      </div>
+      <button mat-icon-button (click)="chiudiDettagli()" class="close-btn">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <!-- Informazioni principali ordine -->
+      <div class="ordine-summary">
+        <div class="summary-grid">
+          <div class="summary-item">
+            <mat-icon>event</mat-icon>
+            <div>
+              <span class="label">Data e Ora</span>
+              <span class="value">{{ formatDate(ordineSelezionato.dataOrdine!) }}</span>
+            </div>
+          </div>
+          
+          <div class="summary-item">
+            <mat-icon>{{ ordineSelezionato.delivery ? 'delivery_dining' : 'table_restaurant' }}</mat-icon>
+            <div>
+              <span class="label">{{ ordineSelezionato.delivery ? 'Asporto' : 'Tavolo' }}</span>
+              <span class="value">{{ ordineSelezionato.delivery ? 'Da asporto' : ('Tavolo ' + (ordineSelezionato.tavolo?.numero || ordineSelezionato.nTavolo || 'N/A')) }}</span>
+            </div>
+          </div>
+          
+          <div class="summary-item">
+            <mat-icon>info</mat-icon>
+            <div>
+              <span class="label">Stato</span>
+              <span class="value">
+                <span class="stato-badge" [ngClass]="'stato-' + ordineSelezionato.status">
+                  {{ ordineSelezionato.status | titlecase }}
+                </span>
+              </span>
+            </div>
+          </div>
+          
+          <div class="summary-item" *ngIf="ordineSelezionato.note">
+            <mat-icon>note</mat-icon>
+            <div>
+              <span class="label">Note</span>
+              <span class="value">{{ ordineSelezionato.note }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenuto dell'ordine -->
+      <div class="contenuto-ordine" *ngIf="!caricamentoDettagli">
+        <!-- Sezione Piatti -->
+        <div class="items-section" *ngIf="piattiOrdine.length > 0">
+          <h4><mat-icon>restaurant</mat-icon> Piatti Ordinati ({{ piattiOrdine.length }})</h4>
+          <div class="items-list">
+            <div *ngFor="let piatto of piattiOrdine" class="item-card piatto-item">
+              <div class="item-header">
+                <mat-icon class="item-icon">restaurant</mat-icon>
+                <div class="item-info">
+                  <!-- Mostra il nome reale del piatto personalizzato -->
+                  <span class="item-name">{{ getNomePiatto(piatto.itemId) }}</span>
+                  <span class="item-quantity" *ngIf="piatto.quantita > 1">Quantità: {{ piatto.quantita }}</span>
+                </div>
+                <span class="item-price">{{ piatto.prezzo | currency:'EUR' }}</span>
+              </div>
+              
+              <!-- Ingredienti del piatto personalizzato -->
+              <div class="ingredienti-container" *ngIf="getIngredientiPiatto(piatto.itemId).length > 0">
+                <span class="ingredienti-label">Ingredienti:</span>
+                <div class="ingredienti-chips">
+                  <span *ngFor="let ingrediente of getIngredientiPiatto(piatto.itemId)" class="ingrediente-chip">
+                    {{ ingrediente.ingrediente?.nome || ('Ingrediente #' + ingrediente.ingredienteId) }}
+                    <span class="quantita-chip" *ngIf="ingrediente.quantita > 1">({{ ingrediente.quantita }}x)</span>
+                  </span>
+                </div>
+              </div>
+              
+              <!-- Messaggio se il piatto personalizzato non ha ingredienti -->
+              <div class="no-ingredienti" *ngIf="getIngredientiPiatto(piatto.itemId).length === 0">
+                <span class="ingredienti-label">Questo piatto personalizzato non ha ingredienti specificati</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sezione Bevande -->
+        <div class="items-section" *ngIf="bevandeOrdine.length > 0">
+          <h4><mat-icon>local_bar</mat-icon> Bevande ({{ bevandeOrdine.length }})</h4>
+          <div class="items-list">
+            <div *ngFor="let bevanda of bevandeOrdine" class="item-card bevanda-item">
+              <div class="item-header">
+                <mat-icon class="item-icon">local_bar</mat-icon>
+                <div class="item-info">
+                  <span class="item-name">{{ bevanda.piatto?.nome || ('Bevanda ID: ' + bevanda.itemId) }}</span>
+                  <span class="item-quantity" *ngIf="bevanda.quantita > 1">Quantità: {{ bevanda.quantita }}</span>
+                </div>
+                <span class="item-price">{{ bevanda.prezzo | currency:'EUR' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading state -->
+      <div class="loading-container" *ngIf="caricamentoDettagli">
+        <mat-icon class="spinner">refresh</mat-icon>
+        <span>Caricamento dettagli ordine...</span>
+      </div>
+
+      <!-- Empty state -->
+      <div class="empty-state-modal" *ngIf="!caricamentoDettagli && piattiOrdine.length === 0 && bevandeOrdine.length === 0">
+        <mat-icon>restaurant_menu</mat-icon>
+        <h4>Nessun contenuto trovato</h4>
+        <p>I dettagli di questo ordine non sono disponibili.</p>
+      </div>
+
+      <!-- Totale -->
+      <div class="totale-section">
+        <div class="totale-container">
+          <span class="totale-label">Totale Ordine:</span>
+          <span class="totale-value">{{ ordineSelezionato.prezzoTotale | currency:'EUR' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button mat-button (click)="chiudiDettagli()" class="close-modal-btn">
+        <mat-icon>close</mat-icon>
+        Chiudi
+      </button>   
+    </div>
+  </div>
+</div>

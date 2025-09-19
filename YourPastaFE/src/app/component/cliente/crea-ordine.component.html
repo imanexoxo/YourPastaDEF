@@ -1,0 +1,233 @@
+<div class="crea-ordine-container">
+  
+  
+  <!-- Header con progresso -->
+  <div class="header-section">
+    <h2>Crea il tuo piatto personalizzato</h2>
+    <div class="progress-info">
+      <span>Step {{ currentStep + 1 }} di {{ steps.length }}: {{ steps[currentStep].titolo }}</span>
+      <div class="piatto-info" *ngIf="getTotalIngredienti() > 0">
+        <mat-icon matBadge="{{ getTotalIngredienti() }}" matBadgeColor="accent">restaurant</mat-icon>
+        <div class="prezzo-info">
+          <!-- Se è studente, mostra prezzo originale e scontato -->
+          <span *ngIf="utenteCorrente?.ruolo === 'studente'" class="prezzo-container">
+            <span class="prezzo-originale">{{ calcolaPrezzoTotalePiatto() | currency:'EUR' }}</span>
+            <span class="prezzo-scontato">{{ calcolaPrezzoScontatoVisualizzazione() | currency:'EUR' }}</span>
+          </span>
+          <!-- Se non è studente, mostra solo il prezzo normale -->
+          <span *ngIf="utenteCorrente?.ruolo !== 'studente'" class="prezzo">{{ calcolaPrezzoTotalePiatto() | currency:'EUR' }}</span>
+          <span class="sconto-badge" *ngIf="utenteCorrente?.ruolo === 'studente'">SCONTO STUDENTE 20%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stepper Progress Bar -->
+  <div class="stepper-progress">
+    <div class="step-indicator" 
+         *ngFor="let step of steps; let i = index"
+         [class.active]="i === currentStep"
+         [class.completed]="i < currentStep">
+      <mat-icon>{{ getStepIcon(step.categoria) }}</mat-icon>
+      <span>{{ step.titolo }}</span>
+    </div>
+  </div>
+
+  <!-- Navigation sotto lo stepper progress -->
+  <div class="navigation-section-global">
+    <button mat-raised-button 
+            color="primary"
+            class="btn-rosso"
+            (click)="precedenteStep()"
+            [disabled]="currentStep === 0 || isLoading">
+      <mat-icon>arrow_back</mat-icon>
+      Indietro
+    </button>
+
+    <div class="navigation-right">
+      <button mat-raised-button 
+              color="primary" 
+              class="btn-rosso"
+              (click)="reset()"
+              *ngIf="getTotalIngredienti() > 0 && !isUltimoStep()">
+        <mat-icon>refresh</mat-icon>
+        Ricomincia
+      </button>
+
+      <button mat-raised-button 
+              color="primary"
+              class="btn-rosso"
+              (click)="prossimoStep()"
+              [disabled]="!isPossibileProseguire() || isLoading"
+              *ngIf="!isUltimoStep()">
+        <mat-icon>arrow_forward</mat-icon>
+        Avanti
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="loading-section">
+    <mat-icon class="loading-spinner">hourglass_empty</mat-icon>
+    <p>Caricamento...</p>
+  </div>
+
+  <!-- Steps Content -->
+  <div *ngIf="!isLoading" class="step-content">
+    
+
+
+
+    <!-- Steps ingredienti -->
+    <div *ngIf="!isUltimoStep()" class="ingredienti-step">
+      <div class="step-header">
+        <h3>
+          <mat-icon>{{ getStepIcon(steps[currentStep].categoria) }}</mat-icon>
+          {{ steps[currentStep].titolo }}
+        </h3>
+        <p>{{ steps[currentStep].descrizione }}</p>
+        <p *ngIf="steps[currentStep].obbligatorio" class="required-notice">
+          * Questo step è obbligatorio
+        </p>
+      </div>
+
+      <div *ngIf="ingredientiDisponibili.length === 0" class="no-items">
+        <mat-icon>info</mat-icon>
+        <p>Nessun ingrediente disponibile in questa categoria al momento.</p>
+      </div>
+
+      <div *ngIf="ingredientiDisponibili.length > 0" class="ingredienti-grid">
+
+        <!-- Ingrediente card -->
+        <div *ngFor="let ingrediente of ingredientiDisponibili" 
+             class="ingrediente-card" 
+             [class.unavailable]="ingrediente.quantita <= 0"
+             [matTooltip]="ingrediente.quantita <= 0 ? 'Non disponibile' : ''">
+          
+          <!-- Immagine -->
+          <div class="card-image">
+            <img [src]="imageService.getImageById(ingrediente.id)" 
+                 [alt]="imageService.getImageAlt(ingrediente.nome)"
+                 (error)="$any($event.target).src = 'assets/images/default.png'">
+          </div>
+          
+          <!-- Contenuto -->
+          <div class="card-content">
+            <h3 class="ingrediente-nome">{{ ingrediente.nome }}</h3>
+            <p class="ingrediente-prezzo">€ {{ ingrediente.prezzoUnitario | number:'1.2-2' }}</p>
+          
+            <!-- Controlli quantità -->
+            <div class="quantity-controls" *ngIf="ingrediente.quantita > 0">
+              <button mat-icon-button 
+                      [disabled]="getQuantitaIngrediente(ingrediente.id) === 0"
+                      (click)="rimuoviIngrediente(ingrediente.id)">
+                <mat-icon>remove</mat-icon>
+              </button>
+              
+              <span class="quantity-display">{{ getQuantitaIngrediente(ingrediente.id) }}</span>
+              
+              <button mat-icon-button 
+                      [disabled]="ingrediente.quantita <= 0"
+                      (click)="aggiungiIngrediente(ingrediente)">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+            
+            <div class="unavailable-message" *ngIf="ingrediente.quantita <= 0">
+              <mat-icon>block</mat-icon>
+              <span>Non disponibile</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <!-- Step finale - Riepilogo -->
+    <div *ngIf="isUltimoStep()" class="riepilogo-step">
+      <div class="step-header">
+        <h3>
+          <mat-icon>receipt</mat-icon>
+          Riepilogo Piatto
+        </h3>
+        <p>Controlla i dettagli del tuo piatto personalizzato</p>
+      </div>
+
+      <mat-card class="riepilogo-card">
+        <mat-card-header>
+          <mat-card-title>Il tuo piatto personalizzato</mat-card-title>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div *ngIf="getTotalIngredienti() === 0" class="empty-selection">
+            <mat-icon>warning</mat-icon>
+            <p>Non hai selezionato nessun ingrediente</p>
+          </div>
+
+          <div *ngIf="getTotalIngredienti() > 0">
+            <!-- Campo nome piatto -->
+            <div class="nome-piatto-section">
+              <mat-form-field appearance="outline" class="nome-piatto-field">
+                <mat-label>Nome del tuo piatto</mat-label>
+                <input matInput 
+                       [(ngModel)]="nomePiattoPersonalizzato" 
+                       placeholder="Es: Spaghetti alla carbonara speciale"
+                       maxlength="50"
+                       required>
+                <mat-icon matSuffix>edit</mat-icon>
+                <mat-hint>Scegli un nome unico per il tuo piatto personalizzato</mat-hint>
+              </mat-form-field>
+            </div>
+
+            <h4>Ingredienti selezionati ({{ getTotalIngredienti() }})</h4>
+            
+            <div class="riepilogo-categoria" *ngFor="let categoria of getCategorie()">
+              <h5>{{ getCategoriaLabel(categoria) }}</h5>
+              <div *ngFor="let item of getIngredientiPerCategoria(categoria)" class="riepilogo-item">
+                <span class="nome">{{ item.ingrediente.nome }}</span>
+                <span class="quantita">x{{ item.quantita }}</span>
+                <span class="prezzo">€{{ (item.ingrediente.prezzoUnitario * item.quantita) | number:'1.2-2' }}</span>
+              </div>
+            </div>
+
+            <mat-divider></mat-divider>
+            
+            <div class="prezzo-totale">
+              <!-- Se è studente, mostra prezzo originale e scontato -->
+              <div *ngIf="utenteCorrente?.ruolo === 'studente'" class="totale-studente">
+                <h5 class="totale-originale">Totale: €{{ calcolaPrezzoTotalePiatto() | number:'1.2-2' }}</h5>
+                <h4 class="totale-scontato">Con sconto: €{{ calcolaPrezzoScontatoVisualizzazione() | number:'1.2-2' }}</h4>
+              </div>
+              <!-- Se non è studente, mostra solo il totale normale -->
+              <h4 *ngIf="utenteCorrente?.ruolo !== 'studente'">Totale: €{{ calcolaPrezzoTotalePiatto() | number:'1.2-2' }}</h4>
+              
+              <!-- Pulsanti azione sotto il totale -->
+              <div class="azioni-piatto">
+                <button mat-raised-button 
+                        color="primary" 
+                        class="btn-rosso btn-secondary"
+                        (click)="reset()"
+                        [disabled]="isLoading">
+                  <mat-icon>refresh</mat-icon>
+                  Ricomincia
+                </button>
+
+                <button mat-raised-button 
+                        color="primary"
+                        class="btn-rosso btn-primary"
+                        (click)="finalizzaPiatto()"
+                        [disabled]="getTotalIngredienti() === 0 || isLoading || !nomePiattoPersonalizzato.trim()">
+                  <mat-icon>add_shopping_cart</mat-icon>
+                  Aggiungi al Carrello
+                </button>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+</div>

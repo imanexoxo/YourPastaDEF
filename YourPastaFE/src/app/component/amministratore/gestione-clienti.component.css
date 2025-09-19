@@ -1,0 +1,97 @@
+.fullscreen-modal .modal-header h3 {
+  font-size: 2.1rem;
+  font-weight: 600;
+  margin: 0;
+}
+/* Modal overlay a piena pagina sopra tutto */
+.fullscreen-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fullscreen-modal .modal-content {
+  background: #fff;
+  border-radius: 10px;
+  max-width: 900px;
+  width: 95vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.25);
+  padding: 32px 24px 24px 24px;
+  position: relative;
+}
+
+.fullscreen-modal .modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.fullscreen-modal .close-btn {
+  margin-left: 16px;
+}
+
+/* Sfoca la tabella sotto la modale */
+.blur-background {
+  filter: blur(2px) grayscale(0.2);
+  pointer-events: none;
+  user-select: none;
+}
+.gestione-container {
+  padding: 20px;
+}
+
+.tab-content {
+  padding: 20px 0;
+}
+
+.utenti-table {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.punti-badge {
+  background-color: #4caf50;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8em;
+  font-weight: 500;
+}
+
+.punti-badge.studente {
+  background-color: #2196f3;
+}
+
+.mat-mdc-tab-group {
+  margin-top: 20px;
+}
+
+h2 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+mat-icon {
+  font-size: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .gestione-container {
+    padding: 10px;
+  }
+  
+  .utenti-table {
+    font-size: 0.9em;
+  }
+}

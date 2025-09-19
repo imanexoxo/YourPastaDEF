@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/component/amministratore/gestione-personale.component.css"],
+  "sourcesContent": ["/* Form modifica utente: griglia responsive */\n.form-grid {\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  gap: 20px 32px;\n  margin-bottom: 24px;\n}\n\n.form-grid mat-form-field {\n  width: 100%;\n}\n\n.form-checkbox {\n  display: flex;\n  align-items: center;\n  height: 56px;\n  padding-left: 8px;\n}\n\n@media (max-width: 900px) {\n  .form-grid {\n    grid-template-columns: 1fr;\n    gap: 16px;\n  }\n}\n.gestione-container {\n  padding: 20px;\n}\n\n.tab-content {\n  padding: 20px 0;\n}\n\n.personale-table {\n  width: 100%;\n  margin-top: 20px;\n}\n\n.mat-mdc-tab-group {\n  margin-top: 20px;\n}\n\nh2 {\n  color: #333;\n  margin-bottom: 10px;\n}\n\nmat-icon {\n  font-size: 20px;\n}\n\n/* Responsive */\n@media (max-width: 768px) {\n  .gestione-container {\n    padding: 10px;\n  }\n  \n  .personale-table {\n    font-size: 0.9em;\n  }\n}\n"],
+  "mappings": ";AACA,CAAC;AACC,WAAS;AACT,yBAAuB,IAAI;AAC3B,OAAK,KAAK;AACV,iBAAe;AACjB;AAEA,CAPC,UAOU;AACT,SAAO;AACT;AAEA,CAAC;AACC,WAAS;AACT,eAAa;AACb,UAAQ;AACR,gBAAc;AAChB;AAEA,OAAO,CAAC,SAAS,EAAE;AACjB,GAnBD;AAoBG,2BAAuB;AACvB,SAAK;AACP;AACF;AACA,CAAC;AACC,WAAS;AACX;AAEA,CAAC;AACC,WAAS,KAAK;AAChB;AAEA,CAAC;AACC,SAAO;AACP,cAAY;AACd;AAEA,CAAC;AACC,cAAY;AACd;AAEA;AACE,SAAO;AACP,iBAAe;AACjB;AAEA;AACE,aAAW;AACb;AAGA,OAAO,CAAC,SAAS,EAAE;AACjB,GA5BD;AA6BG,aAAS;AACX;AAEA,GAxBD;AAyBG,eAAW;AACb;AACF;",
+  "names": []
+}

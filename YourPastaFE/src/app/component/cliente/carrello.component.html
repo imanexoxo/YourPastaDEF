@@ -1,0 +1,182 @@
+<div class="carrello-container">
+  <mat-card class="header-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon matBadge="{{carrello.numeroTotaleItem}}" 
+                  [matBadgeHidden]="carrello.numeroTotaleItem === 0"
+                  matBadgeColor="primary">shopping_cart</mat-icon>
+        Il Tuo Carrello
+      </mat-card-title>
+      <mat-card-subtitle>
+        Gestisci i tuoi piatti e bevande prima dell'ordine
+      </mat-card-subtitle>
+    </mat-card-header>
+  </mat-card>
+
+  <!-- Carrello Vuoto -->
+  <mat-card *ngIf="isCarrelloVuoto()" class="empty-cart-card">
+    <mat-card-content class="empty-cart-content">
+      <mat-icon class="empty-cart-icon">shopping_cart</mat-icon>
+      <h2>Il tuo carrello è vuoto</h2>
+      <p>Inizia a creare il tuo piatto personalizzato o scegli una bevanda!</p>
+      <button mat-raised-button (click)="continuaShopping()" class="continue-shopping-btn">
+        <mat-icon>restaurant</mat-icon>
+        Inizia a Ordinare
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Lista Item Carrello -->
+  <div *ngIf="!isCarrelloVuoto()" class="carrello-content">
+    
+    <!-- Item del Carrello -->
+    <mat-card *ngFor="let item of carrello.items; let i = index" class="item-card">
+      <mat-card-content>
+        <div class="item-layout">
+          
+
+          <!-- Dettagli Item -->
+          <div class="item-details">
+            <h3 class="item-name">{{ getNomeItem(item) }}</h3>
+            
+            <!-- Info categoria per piatti -->
+            <div *ngIf="item.tipo === 'piatto'" class="piatto-info">
+              <mat-icon>restaurant_menu</mat-icon>
+              <span>Piatto</span>
+            </div>
+            
+            <!-- Descrizione per piatti -->
+            <p *ngIf="getDescrizioneItem(item)" class="item-description">
+              {{ getDescrizioneItem(item) }}
+            </p>
+            
+            <!-- Ingredienti per piatti personalizzati -->
+            <div *ngIf="item.tipo === 'piatto' && item.piatto && item.piatto.ingredienti && item.piatto.ingredienti.length > 0" class="ingredienti-section">
+              <div class="ingredienti-header">
+                <mat-icon>restaurant_menu</mat-icon>
+                <span>Ingredienti ({{ item.piatto.ingredienti.length }})</span>
+              </div>
+              
+              <div class="ingredienti-grid">
+                <div class="ingrediente-chip" *ngFor="let ing of item.piatto?.ingredienti">
+                  <span class="ingrediente-nome">{{ ing.ingrediente?.nome || 'Ingrediente ' + ing.ingredienteId }}</span>
+                  <span *ngIf="ing.quantita > 1" class="ingrediente-quantita">x{{ ing.quantita }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Info categoria per bevande -->
+            <div *ngIf="item.tipo === 'bevanda'" class="bevanda-info">
+              <mat-icon>local_bar</mat-icon>
+              <span>Bevanda</span>
+            </div>
+          </div>
+
+          <!-- Controlli Quantità e Prezzo -->
+          <div class="item-controls">
+            <div class="quantity-controls">
+              <button mat-icon-button (click)="diminuisciQuantita(i)" 
+                      [disabled]="isLoading">
+                <mat-icon>remove</mat-icon>
+              </button>
+              
+              <span class="quantity-display">{{ item.quantita }}</span>
+              
+              <button mat-icon-button (click)="aumentaQuantita(i)" 
+                      [disabled]="isLoading">
+                <mat-icon>add</mat-icon>
+              </button>
+            </div>
+
+            <div class="price-info">
+              <span class="unit-price">€{{ item.prezzoUnitario.toFixed(2) }} cad.</span>
+              <span class="total-price">€{{ item.prezzoTotale.toFixed(2) }}</span>
+            </div>
+
+            <div class="item-actions">
+              <!-- Pulsante Rimuovi -->
+              <button mat-icon-button 
+                      (click)="rimuoviItem(i)" 
+                      color="warn"
+                      matTooltip="Rimuovi dal carrello">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-divider></mat-divider>
+
+    <!-- Riepilogo Prezzi -->
+    <mat-card class="summary-card">
+      <mat-card-content>
+        <h3>Riepilogo Ordine</h3>
+        
+        <div class="price-row">
+          <span>Subtotale ({{ carrello.numeroTotaleItem }} item):</span>
+          <span>€{{ carrello.prezzoTotaleOriginale.toFixed(2) }}</span>
+        </div>
+
+        <!-- Prezzo Originale -->
+        <div class="price-row">
+          <span>Subtotale:</span>
+          <span>€{{ carrello.prezzoTotaleOriginale.toFixed(2) }}</span>
+        </div>
+
+        <!-- Sconto Studente -->
+        <div *ngIf="isUtenteStudente()" class="price-row discount-row">
+          <span>
+            <mat-icon>school</mat-icon>
+            Sconto Studente (20%):
+          </span>
+          <span class="discount-amount">-€{{ getPrezziVisualizzazione().sconto.toFixed(2) }}</span>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="price-row total-row">
+          <!-- Se è studente, mostra il prezzo scontato -->
+          <span class="total-label">Totale{{ isUtenteStudente() ? ' (con sconto)' : '' }}:</span>
+          <span class="total-amount">
+            <span *ngIf="isUtenteStudente()" class="prezzo-container">
+              <span class="prezzo-originale">€{{ getPrezziVisualizzazione().prezzoOriginale.toFixed(2) }}</span>
+              <span class="prezzo-scontato">€{{ getPrezziVisualizzazione().prezzoScontato.toFixed(2) }}</span>
+            </span>
+            <span *ngIf="!isUtenteStudente()">€{{ carrello.prezzoTotaleOriginale.toFixed(2) }}</span>
+          </span>
+        </div>
+
+        <!-- Azioni Carrello -->
+        <div class="cart-actions">
+          <div class="secondary-actions">
+            <button mat-button (click)="continuaShopping()">
+              <mat-icon>add_shopping_cart</mat-icon>
+              Continua Shopping
+            </button>
+
+            <button mat-button color="warn" (click)="svuotaCarrello()">
+              <mat-icon>clear_all</mat-icon>
+              Svuota Carrello
+            </button>
+          </div>
+
+          <button mat-raised-button 
+                  color="primary" 
+                  (click)="vaiAlCheckout()" 
+                  class="checkout-button"
+                  [disabled]="isLoading">
+            <mat-icon>payment</mat-icon>
+            Procedi al Checkout
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <div class="loading-spinner">Caricamento...</div>
+  </div>
+</div>

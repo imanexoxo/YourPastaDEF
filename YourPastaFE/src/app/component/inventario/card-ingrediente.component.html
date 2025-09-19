@@ -1,0 +1,54 @@
+<mat-card class="ingrediente-card" [class.clickable]="clickable" (click)="onCardClick()">
+      <div class="card-image">
+        <img [src]="getImageUrl()" 
+             [alt]="ingrediente.nome"
+             (error)="onImageError($event)"
+             loading="lazy">
+        
+        <!-- Badge disponibilità -->
+        <div class="availability-badge" 
+             [class]="ingrediente.quantita > 0 ? 'disponibile' : 'non-disponibile'"
+             [matTooltip]="ingrediente.quantita > 0 ? 'Disponibile' : 'Non disponibile'">
+          <mat-icon>{{ ingrediente.quantita > 0 ? 'check' : 'close' }}</mat-icon>
+        </div>
+      </div>
+      
+      <mat-card-header>
+        <mat-card-title>{{ ingrediente.nome }}</mat-card-title>
+        <mat-card-subtitle>{{ getCategoriaDisplayName() }}</mat-card-subtitle>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <p class="description">Ingrediente di qualità per i tuoi piatti.</p>
+        
+        <div class="card-info">
+          <div class="price-info">
+            <span class="price">{{ getPrezzoFormattato() }}€</span>
+          </div>
+          
+          <div class="quantity-info">
+            <span class="quantity">Disponibili: {{ ingrediente.quantita }}</span>
+          </div>
+          
+          <div class="availability-text" [class]="ingrediente.quantita > 0 ? 'disponibile' : 'non-disponibile'">
+            {{ ingrediente.quantita > 0 ? 'Disponibile' : 'Esaurito' }}
+          </div>
+        </div>
+      </mat-card-content>
+      
+      <mat-card-actions *ngIf="showActions">
+        <button mat-button (click)="onDettagliClick($event)" [disabled]="ingrediente.quantita === 0">
+          <mat-icon>visibility</mat-icon>
+          Dettagli
+        </button>
+        
+        <button *ngIf="showAddToCart" 
+                mat-raised-button 
+                color="primary" 
+                (click)="onAggiungiCarrelloClick($event)"
+                [disabled]="ingrediente.quantita === 0">
+          <mat-icon>add_shopping_cart</mat-icon>
+          Aggiungi
+        </button>
+      </mat-card-actions>
+    </mat-card>

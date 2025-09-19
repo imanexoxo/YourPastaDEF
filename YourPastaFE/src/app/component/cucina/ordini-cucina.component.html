@@ -1,0 +1,268 @@
+<div class="ordini-cucina-container">
+  
+  <!-- Header -->
+  <div class="header-section">
+    <h2>
+      <mat-icon>restaurant</mat-icon>
+      Gestione Ordini Cucina
+    </h2>
+    <div class="stats-info">
+      <mat-icon matBadge="{{ getTotalOrdiniAttivi() }}" matBadgeColor="accent">notifications</mat-icon>
+      <span>Ordini attivi: {{ getTotalOrdiniAttivi() }}</span>
+      <button mat-icon-button (click)="caricaOrdini()" [disabled]="isLoading" title="Aggiorna">
+        <mat-icon [class.spinning]="isLoading">refresh</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabs per stati ordini -->
+  <mat-tab-group dynamicHeight>
+    
+    <!-- Tab Ordini in Attesa -->
+    <mat-tab label="In Attesa ({{ ordiniPending.length }})">
+      <div class="tab-content">
+        <div *ngIf="ordiniPending.length === 0" class="no-ordini">
+          <mat-icon>check_circle</mat-icon>
+          <h3>Nessun ordine in attesa</h3>
+          <p>Tutti gli ordini sono stati presi in carico!</p>
+        </div>
+
+        <div *ngIf="ordiniPending.length > 0" class="ordini-cards">
+
+          <!-- ORDINE CARD -->
+          <mat-card *ngFor="let ordine of ordiniPending" class="ordine-card pending">
+            <!-- Ordine card header-->
+            <mat-card-header>
+              <mat-card-title>
+                <span class="ordine-id">Ordine #{{ ordine.id }}</span>
+                <mat-chip [style.background-color]="getTempoColor(ordine.dataOrdine!)" class="tempo-chip">
+                  {{ calcolaTempoTrascorso(ordine.dataOrdine!) }}
+                </mat-chip>
+              </mat-card-title>
+              <mat-card-subtitle>
+                Tavolo {{ ordine.nTavolo }} • {{ formatDate(ordine.dataOrdine!) }}
+              </mat-card-subtitle>
+            </mat-card-header>
+
+            <!-- Ordine card content-->
+            <mat-card-content>
+              <div class="ordine-dettagli">
+                <p><strong>Prezzo:</strong> {{ ordine.prezzoTotale | currency:'EUR' }}</p>
+                
+                <!-- Ingredienti -->
+                <div class="ingredienti-section" *ngIf="hasIngredienti(ordine.id!)">
+                  <strong>Riepilogo:</strong>
+
+                  <div class="ingredienti-lista">
+
+                    <!-- Item per ogni ordine -->
+                    <ng-container *ngFor="let item of ordineItems[ordine.id!]">
+                      <div class="ordine-item-block">
+                        <div *ngIf="item.tipoItem === 'PIATTO'">
+                          <span class="item-titolo">🍝 Piatto {{ item.itemId }} <span *ngIf="item.quantita">(x{{ item.quantita }})</span></span>
+                          <ul class="ingredienti-piatto">
+                            <!-- lista degli ingredienti-->
+                            <li *ngFor="let ingrediente of piattoItemsPerPiatto[item.itemId]">
+                              <div>
+                                <span class="ingrediente-nome">{{ ingredientiPerId[ingrediente.ingredienteId].nome }}</span>
+                                <span class="ingrediente-quantita">x{{ ingrediente.quantita }}</span>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                        <div *ngIf="item.tipoItem === 'BEVANDA'">
+                          <span class="item-titolo">🥤 {{ ingredientiPerId[item.itemId].nome }} <span *ngIf="item.quantita">(x{{ item.quantita }})</span></span>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+
+                </div>
+                
+                <div *ngIf="ordine.note" class="note">
+                  <strong>Note:</strong> {{ ordine.note }}
+                </div>
+              </div>
+            </mat-card-content>
+
+            <mat-card-actions>
+              <button mat-raised-button 
+                      color="primary" 
+                      (click)="iniziaPreparazione(ordine)">
+                <mat-icon>play_arrow</mat-icon>
+                Inizia Preparazione
+              </button>
+              <button mat-button 
+                      color="warn" 
+                      (click)="annullaOrdine(ordine)">
+                <mat-icon>cancel</mat-icon>
+                Annulla
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+
+
+    <!-- Tab Ordini in Preparazione -->
+    <mat-tab label="In Preparazione ({{ ordiniInPreparazione.length }})">
+      <div class="tab-content">
+        <div *ngIf="ordiniInPreparazione.length === 0" class="no-ordini">
+          <mat-icon>info</mat-icon>
+          <h3>Nessun ordine in preparazione</h3>
+          <p>Prendi in carico un ordine dalla sezione "In Attesa"</p>
+        </div>
+
+        <div *ngIf="ordiniInPreparazione.length > 0" class="ordini-cards">
+
+          <!-- ORDINE CARD -->
+          <mat-card *ngFor="let ordine of ordiniInPreparazione" class="ordine-card in-preparazione">
+            <!-- Ordine card header -->
+            <mat-card-header>
+              <mat-card-title>
+                <span class="ordine-id">Ordine #{{ ordine.id }}</span>
+                <mat-chip [style.background-color]="getTempoColor(ordine.dataOrdine!)" class="tempo-chip">
+                  {{ calcolaTempoTrascorso(ordine.dataOrdine!) }}
+                </mat-chip>
+              </mat-card-title>
+              <mat-card-subtitle>
+                Tavolo {{ ordine.nTavolo }} • {{ formatDate(ordine.dataOrdine!) }}
+              </mat-card-subtitle>
+            </mat-card-header>
+
+            <!-- Ordine card content -->
+            <mat-card-content>
+              <div class="ordine-dettagli">
+                <p><strong>Prezzo:</strong> {{ ordine.prezzoTotale | currency:'EUR' }}</p>
+                
+                <!-- Ingredienti -->
+                <div class="ingredienti-section" *ngIf="hasIngredienti(ordine.id!)">
+                  <strong>Riepilogo:</strong>
+                    
+                  <div class="ingredienti-lista">
+                    <!-- Item per ogni ordine -->
+                    <ng-container *ngFor="let item of ordineItems[ordine.id!]">
+                      <div class="ordine-item-block">
+                        <div *ngIf="item.tipoItem === 'PIATTO'">
+                          <span class="item-titolo">🍝 Piatto {{ item.itemId }} <span *ngIf="item.quantita">(x{{ item.quantita }})</span></span>
+                          <ul class="ingredienti-piatto">
+                            <!-- lista degli ingredienti-->
+                            <li *ngFor="let ingrediente of piattoItemsPerPiatto[item.itemId]">
+                              <div>
+                                <span class="ingrediente-nome">{{ ingredientiPerId[ingrediente.ingredienteId].nome }}</span>
+                                <span class="ingrediente-quantita">x{{ ingrediente.quantita }}</span>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                        <div *ngIf="item.tipoItem === 'BEVANDA'">
+                          <span class="item-titolo">🥤 {{ ingredientiPerId[item.itemId].nome }} <span *ngIf="item.quantita">(x{{ item.quantita }})</span></span>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+                
+                <div *ngIf="ordine.note" class="note">
+                  <strong>Note:</strong> {{ ordine.note }}
+                </div>
+              </div>
+            </mat-card-content>
+
+            <mat-card-actions>
+              <button mat-raised-button 
+                      color="accent" 
+                      (click)="completaPreparazione(ordine)">
+                <mat-icon>done</mat-icon>
+                Segna come Pronto
+              </button>
+              <button mat-button 
+                      color="warn" 
+                      (click)="annullaOrdine(ordine)">
+                <mat-icon>cancel</mat-icon>
+                Annulla
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Tab Ordini Pronti -->
+    <mat-tab label="Pronti ({{ ordiniPronti.length }})">
+      <div class="tab-content">
+        <div *ngIf="ordiniPronti.length === 0" class="no-ordini">
+          <mat-icon>restaurant_menu</mat-icon>
+          <h3>Nessun ordine pronto</h3>
+          <p>Gli ordini completati appariranno qui</p>
+        </div>
+
+        <div *ngIf="ordiniPronti.length > 0" class="ordini-cards">
+          <mat-card *ngFor="let ordine of ordiniPronti" class="ordine-card pronto">
+            <mat-card-header>
+              <mat-card-title>
+                <span class="ordine-id">Ordine #{{ ordine.id }}</span>
+                <mat-chip color="accent" class="tempo-chip">
+                  {{ calcolaTempoTrascorso(ordine.dataOrdine!) }}
+                </mat-chip>
+              </mat-card-title>
+              <mat-card-subtitle>
+                Tavolo {{ ordine.nTavolo }} • {{ formatDate(ordine.dataOrdine!) }}
+              </mat-card-subtitle>
+            </mat-card-header>
+
+            <mat-card-content>
+              <div class="ordine-dettagli">
+                <p><strong>Prezzo:</strong> {{ ordine.prezzoTotale | currency:'EUR' }}</p>
+                
+                <!-- Ingredienti -->
+                <div class="ingredienti-section" *ngIf="hasIngredienti(ordine.id!)">
+                  <strong>Riepilogo:</strong>
+                  <div class="ingredienti-lista">
+                    <!-- Item per ogni ordine -->
+                    <ng-container *ngFor="let item of ordineItems[ordine.id!]">
+                      <div class="ordine-item-block">
+                        <div *ngIf="item.tipoItem === 'PIATTO'">
+                          <span class="item-titolo">🍝 Piatto {{ item.itemId }} <span *ngIf="item.quantita">(x{{ item.quantita }})</span></span>
+                          <ul class="ingredienti-piatto">
+                            <!-- lista degli ingredienti-->
+                            <li *ngFor="let ingrediente of piattoItemsPerPiatto[item.itemId]">
+                              <div>
+                                <span class="ingrediente-nome">{{ ingredientiPerId[ingrediente.ingredienteId].nome }}</span>
+                                <span class="ingrediente-quantita">x{{ ingrediente.quantita }}</span>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                        <div *ngIf="item.tipoItem === 'BEVANDA'">
+                          <span class="item-titolo">🥤 {{ ingredientiPerId[item.itemId].nome }} <span *ngIf="item.quantita">(x{{ item.quantita }})</span></span>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+                
+                <div *ngIf="ordine.note" class="note">
+                  <strong>Note:</strong> {{ ordine.note }}
+                </div>
+                <div class="pronto-alert">
+                  <mat-icon>check_circle</mat-icon>
+                  <span>Pronto al servizio!</span>
+                </div>
+              </div>
+            </mat-card-content>
+
+            <mat-card-actions>
+              <button mat-raised-button color="primary" (click)="cambiaStato(ordine, 'chiuso')">
+                <mat-icon>check</mat-icon>
+                Segna come Chiuso
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+</div>

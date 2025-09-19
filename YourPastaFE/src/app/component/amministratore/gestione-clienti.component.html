@@ -1,0 +1,90 @@
+<div class="gestione-container">
+  <h2>Gestione Clienti e Studenti</h2>
+
+  <div class="tab-content" [class.blur-background]="utenteStorico">
+    <mat-table [dataSource]="utentiUnificati" class="utenti-table">
+      <!-- Colonna Nome -->
+      <ng-container matColumnDef="nome">
+        <mat-header-cell *matHeaderCellDef>Nome</mat-header-cell>
+        <mat-cell *matCellDef="let utente">{{ utente.nome }}</mat-cell>
+      </ng-container>
+
+      <!-- Colonna Cognome -->
+      <ng-container matColumnDef="cognome">
+        <mat-header-cell *matHeaderCellDef>Cognome</mat-header-cell>
+        <mat-cell *matCellDef="let utente">{{ utente.cognome }}</mat-cell>
+      </ng-container>
+
+      <!-- Colonna Username -->
+      <ng-container matColumnDef="username">
+        <mat-header-cell *matHeaderCellDef>Username</mat-header-cell>
+        <mat-cell *matCellDef="let utente">{{ utente.username }}</mat-cell>
+      </ng-container>
+
+      <!-- Colonna Email -->
+      <ng-container matColumnDef="email">
+        <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
+        <mat-cell *matCellDef="let utente">{{ utente.email }}</mat-cell>
+      </ng-container>
+
+      <!-- Colonna Punti -->
+      <ng-container matColumnDef="punti">
+        <mat-header-cell *matHeaderCellDef>Punti</mat-header-cell>
+        <mat-cell *matCellDef="let utente; let i = index">
+          <form (ngSubmit)="salvaPunti(utente, puntiEdit[i])" #puntiForm="ngForm" style="display: flex; align-items: center; gap: 8px;">
+            <input matInput type="number" min="0" [(ngModel)]="puntiEdit[i]" name="puntiInput{{i}}" style="width: 70px;">
+            <button mat-icon-button color="primary" type="submit" [disabled]="puntiEdit[i] === utente.punti">
+              <mat-icon>save</mat-icon>
+            </button>
+          </form>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Colonna Stato -->
+      <ng-container matColumnDef="stato">
+        <mat-header-cell *matHeaderCellDef>Stato</mat-header-cell>
+        <mat-cell *matCellDef="let utente">
+          <mat-chip [color]="utente.bloccato ? 'warn' : (utente.ruolo === 'studente' ? 'accent' : 'primary')">
+            {{ utente.bloccato ? 'Bloccato' : 'Attivo' }}
+          </mat-chip>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Colonna Azioni -->
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef>Azioni</mat-header-cell>
+        <mat-cell *matCellDef="let utente">
+          <button mat-icon-button 
+                  [color]="utente.bloccato ? 'primary' : 'warn'"
+                  [matTooltip]="utente.bloccato ? 'Sblocca utente' : 'Blocca utente'"
+                  (click)="cambiaStatoUtente(utente)">
+            <mat-icon>{{ utente.bloccato ? 'lock_open' : 'lock' }}</mat-icon>
+          </button>
+          <button mat-icon-button color="accent" title="Storico ordini" (click)="apriStoricoOrdini(utente)">
+            <mat-icon>history</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" title="Elimina utente" 
+                  (click)="eliminaUtente(utente.id!)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+      </div>
+
+  <!-- Dialog/Modal Storico Ordini (overlay a piena pagina) -->
+  <div *ngIf="utenteStorico" class="modal-overlay fullscreen-modal" (click)="chiudiStoricoOrdini()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Storico ordini di {{ utenteStorico.nome }} {{ utenteStorico.cognome }}</h3>
+        <button mat-icon-button (click)="chiudiStoricoOrdini()" class="close-btn">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <app-storico-ordini [utenteId]="utenteStorico.id" [adminMode]="true"></app-storico-ordini>
+    </div>
+  </div>
+    </div>

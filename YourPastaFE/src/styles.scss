@@ -1,0 +1,227 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { 
+  margin: 0; 
+  font-family: Roboto, "Helvetica Neue", sans-serif; 
+  background-color: #e5d4bd;
+}
+
+/* Override globali per Material UI - Filtro Categoria */
+.filtro-categoria .mat-mdc-form-field {
+  color: #d32f2f !important;
+}
+
+.filtro-categoria .mat-mdc-form-field .mdc-notched-outline__leading,
+.filtro-categoria .mat-mdc-form-field .mdc-notched-outline__notch,
+.filtro-categoria .mat-mdc-form-field .mdc-notched-outline__trailing {
+  border-color: #d32f2f !important;
+}
+
+.filtro-categoria .mat-mdc-form-field.mdc-text-field--focused .mdc-notched-outline__leading,
+.filtro-categoria .mat-mdc-form-field.mdc-text-field--focused .mdc-notched-outline__notch,
+.filtro-categoria .mat-mdc-form-field.mdc-text-field--focused .mdc-notched-outline__trailing {
+  border-color: #d32f2f !important;
+  border-width: 2px !important;
+}
+
+.filtro-categoria .mat-mdc-form-field .mdc-floating-label {
+  color: #d32f2f !important;
+}
+
+.filtro-categoria .mat-mdc-form-field.mdc-text-field--focused .mdc-floating-label {
+  color: #d32f2f !important;
+}
+
+.filtro-categoria .mat-mdc-select-arrow {
+  color: #d32f2f !important;
+}
+
+.filtro-categoria .mat-mdc-select-value {
+  color: #d32f2f !important;
+}
+
+.filtro-categoria .mat-mdc-select-trigger {
+  color: #d32f2f !important;
+}
+
+/* Stili per le opzioni del dropdown */
+.mat-mdc-select-panel {
+  background: white !important;
+}
+
+.mat-mdc-option {
+  color: #333 !important;
+}
+
+.mat-mdc-option:hover {
+  background-color: #ffebee !important;
+  color: #d32f2f !important;
+}
+
+.mat-mdc-option.mdc-list-item--selected {
+  background-color: #d32f2f !important;
+  color: white !important;
+}
+
+.mat-mdc-option.mdc-list-item--selected:hover {
+  background-color: #b71c1c !important;
+  color: white !important;
+}
+
+/* FORZA STILI CON MASSIMA SPECIFICITÀ */
+/* CSS Custom Properties per Material Design */
+.filtro-categoria.mat-mdc-form-field,
+.filtro-categoria .mat-mdc-form-field,
+mat-form-field.filtro-categoria {
+  --mdc-outlined-text-field-outline-color: #d32f2f !important;
+  --mdc-outlined-text-field-focused-outline-color: #d32f2f !important;
+  --mdc-outlined-text-field-label-text-color: #d32f2f !important;
+  --mdc-outlined-text-field-focused-label-text-color: #d32f2f !important;
+  --mat-select-trigger-text-color: #d32f2f !important;
+  --mat-select-arrow-color: #d32f2f !important;
+  --mat-form-field-outline-color: #d32f2f !important;
+  --mat-form-field-focused-outline-color: #d32f2f !important;
+  --mat-form-field-label-text-color: #d32f2f !important;
+  --mat-form-field-focused-label-text-color: #d32f2f !important;
+}
+
+/* Stili con massima specificità usando body */
+body .filtro-categoria .mat-mdc-form-field .mdc-notched-outline .mdc-notched-outline__leading,
+body .filtro-categoria .mat-mdc-form-field .mdc-notched-outline .mdc-notched-outline__notch,
+body .filtro-categoria .mat-mdc-form-field .mdc-notched-outline .mdc-notched-outline__trailing {
+  border-color: #d32f2f !important;
+}
+
+body .filtro-categoria .mat-mdc-form-field.mdc-text-field--focused .mdc-notched-outline .mdc-notched-outline__leading,
+body .filtro-categoria .mat-mdc-form-field.mdc-text-field--focused .mdc-notched-outline .mdc-notched-outline__notch,
+body .filtro-categoria .mat-mdc-form-field.mdc-text-field--focused .mdc-notched-outline .mdc-notched-outline__trailing {
+  border-color: #d32f2f !important;
+  border-width: 2px !important;
+}
+
+body .filtro-categoria .mat-mdc-form-field .mdc-floating-label,
+body .filtro-categoria .mat-mdc-form-field.mdc-text-field--focused .mdc-floating-label {
+  color: #d32f2f !important;
+}
+
+body .filtro-categoria .mat-mdc-select-arrow,
+body .filtro-categoria .mat-mdc-select-value,
+body .filtro-categoria .mat-mdc-select-trigger {
+  color: #d32f2f !important;
+}
+
+/* Stili globali per snackbar notifiche */
+.snackbar-success {
+  background: #4caf50 !important;
+  color: white !important;
+}
+
+.snackbar-error {
+  background: #f44336 !important;
+  color: white !important;
+}
+
+.snackbar-warning {
+  background: #ff9800 !important;
+  color: white !important;
+}
+
+.snackbar-info {
+  background: #2196f3 !important;
+  color: white !important;
+}
+
+/* Animazioni globali per migliorare UX */
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+.fade-out {
+  animation: fadeOut 0.3s ease-out;
+}
+
+.slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+.slide-down {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Utilità per stati di caricamento */
+.loading-state {
+  opacity: 0.6;
+  pointer-events: none;
+  position: relative;
+}
+
+.loading-state::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  z-index: 10;
+}
+
+/* Scroll personalizzato per consistenza */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}

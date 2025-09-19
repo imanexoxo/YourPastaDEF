@@ -1,0 +1,294 @@
+
+<div class="gestione-container">
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <h2>Gestione Personale</h2>
+    <button mat-raised-button color="primary" (click)="apriFormAggiungiUtente()" *ngIf="!modalitaModifica && !modalitaAggiunta">
+      <mat-icon>person_add</mat-icon> Aggiungi Dipendente
+    </button>
+  </div>
+
+
+  <!-- Form aggiunta utente -->
+  <div *ngIf="modalitaAggiunta" class="dettaglio-view">
+    <mat-card class="dettaglio-card">
+      <mat-card-header>
+        <mat-card-title>Aggiungi Nuovo Dipendente</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form #aggiungiUtenteForm="ngForm" (ngSubmit)="onSubmitAggiungiUtente()">
+          <div class="form-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Nome</mat-label>
+              <input matInput [(ngModel)]="aggiungiUtenteModel.nome" name="nomeA" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Cognome</mat-label>
+              <input matInput [(ngModel)]="aggiungiUtenteModel.cognome" name="cognomeA" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Username</mat-label>
+              <input matInput [(ngModel)]="aggiungiUtenteModel.username" name="usernameA" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Password</mat-label>
+              <input matInput [(ngModel)]="aggiungiUtenteModel.password" name="passwordA" required [type]="showPassword ? 'text' : 'password'">
+              <button mat-icon-button matSuffix type="button" (click)="showPassword = !showPassword" [matTooltip]="showPassword ? 'Nascondi password' : 'Mostra password'">
+                <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Email</mat-label>
+              <input matInput [(ngModel)]="aggiungiUtenteModel.email" name="emailA" required type="email">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Data di nascita</mat-label>
+              <input matInput [(ngModel)]="aggiungiUtenteModel.dataNascita" name="dataNascitaA" required type="date">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Ruolo</mat-label>
+              <input matInput [(ngModel)]="aggiungiUtenteModel.ruolo" name="ruoloA" required>
+            </mat-form-field>
+            <div class="form-checkbox">
+              <mat-checkbox [(ngModel)]="aggiungiUtenteModel.bloccato" name="bloccatoA">Bloccato</mat-checkbox>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button mat-raised-button color="primary" type="submit" [disabled]="!aggiungiUtenteForm.form.valid">Aggiungi Dipendente</button>
+            <button mat-button type="button" (click)="chiudiFormAggiungiUtente()">Annulla</button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Form modifica utente -->
+  <div *ngIf="modalitaModifica" class="dettaglio-view">
+    <mat-card class="dettaglio-card">
+      <mat-card-header>
+        <mat-card-title>Modifica Utente</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form #modificaUtenteForm="ngForm" (ngSubmit)="onSubmitModificaUtente()">
+          <div class="form-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>ID</mat-label>
+              <input matInput [value]="modificaUtenteModel.id" disabled>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Nome</mat-label>
+              <input matInput [(ngModel)]="modificaUtenteModel.nome" name="nome" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Cognome</mat-label>
+              <input matInput [(ngModel)]="modificaUtenteModel.cognome" name="cognome" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Username</mat-label>
+              <input matInput [(ngModel)]="modificaUtenteModel.username" name="username" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Password</mat-label>
+              <input matInput [(ngModel)]="modificaUtenteModel.password" name="password" required [type]="showPassword ? 'text' : 'password'">
+              <button mat-icon-button matSuffix type="button" (click)="showPassword = !showPassword" [matTooltip]="showPassword ? 'Nascondi password' : 'Mostra password'">
+                <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Email</mat-label>
+              <input matInput [(ngModel)]="modificaUtenteModel.email" name="email" required type="email">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Data di nascita</mat-label>
+              <input matInput [(ngModel)]="modificaUtenteModel.dataNascita" name="dataNascita" required type="date">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Ruolo</mat-label>
+              <input matInput [(ngModel)]="modificaUtenteModel.ruolo" name="ruolo" required>
+            </mat-form-field>
+            <div class="form-checkbox">
+              <mat-checkbox [(ngModel)]="modificaUtenteModel.bloccato" name="bloccato">Bloccato</mat-checkbox>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button mat-raised-button color="primary" type="submit" [disabled]="!modificaUtenteForm.form.valid">Salva Modifiche</button>
+            <button mat-button type="button" (click)="chiudiFormModificaUtente()">Annulla</button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Tabella personale -->
+  <mat-tab-group *ngIf="!modalitaModifica">
+    <!-- Tab Cuochi -->
+    <mat-tab label="Cuochi ({{ cuochi.length }})">
+      <div class="tab-content">
+        <mat-table [dataSource]="cuochi" class="personale-table">
+          
+          <!-- Colonna Nome -->
+          <ng-container matColumnDef="nome">
+            <mat-header-cell *matHeaderCellDef>Nome</mat-header-cell>
+            <mat-cell *matCellDef="let persona">{{ persona.nome }}</mat-cell>
+          </ng-container>
+
+          <!-- Colonna Cognome -->
+          <ng-container matColumnDef="cognome">
+            <mat-header-cell *matHeaderCellDef>Cognome</mat-header-cell>
+            <mat-cell *matCellDef="let persona">{{ persona.cognome }}</mat-cell>
+          </ng-container>
+
+          <!-- Colonna Username -->
+          <ng-container matColumnDef="username">
+            <mat-header-cell *matHeaderCellDef>Username</mat-header-cell>
+            <mat-cell *matCellDef="let persona">{{ persona.username }}</mat-cell>
+          </ng-container>
+
+          <!-- Colonna Password -->
+          <ng-container matColumnDef="password">
+            <mat-header-cell *matHeaderCellDef>Password</mat-header-cell>
+            <mat-cell *matCellDef="let persona">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-family: 'Fira Mono', monospace; letter-spacing: 2px;">
+                  <ng-container *ngIf="!persona._showPassword">{{ persona.password ? '*'.repeat(persona.password.length) : '' }}</ng-container>
+                  <ng-container *ngIf="persona._showPassword">{{ persona.password }}</ng-container>
+                </span>
+                <button mat-icon-button type="button" (click)="persona._showPassword = !persona._showPassword" [matTooltip]="persona._showPassword ? 'Nascondi password' : 'Mostra password'">
+                  <mat-icon>{{ persona._showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+              </div>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Colonna Email -->
+          <ng-container matColumnDef="email">
+            <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
+            <mat-cell *matCellDef="let persona">{{ persona.email }}</mat-cell>
+          </ng-container>
+
+          <!-- Colonna Data Nascita -->
+          <ng-container matColumnDef="dataNascita">
+            <mat-header-cell *matHeaderCellDef>Data Nascita</mat-header-cell>
+            <mat-cell *matCellDef="let persona">{{ formatDate(persona.dataNascita) }}</mat-cell>
+          </ng-container>
+
+          <!-- Colonna Stato -->
+          <ng-container matColumnDef="stato">
+            <mat-header-cell *matHeaderCellDef>Stato</mat-header-cell>
+            <mat-cell *matCellDef="let persona">
+              <mat-chip [color]="persona.bloccato ? 'warn' : 'primary'">
+                {{ persona.bloccato ? 'Bloccato' : 'Attivo' }}
+              </mat-chip>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Colonna Azioni -->
+          <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef>Azioni</mat-header-cell>
+            <mat-cell *matCellDef="let persona">
+              <button mat-icon-button 
+                      [color]="persona.bloccato ? 'primary' : 'warn'"
+                      [matTooltip]="persona.bloccato ? 'Sblocca personale' : 'Blocca personale'"
+                      (click)="cambiaStatoPersonale(persona)">
+                <mat-icon>{{ persona.bloccato ? 'lock_open' : 'lock' }}</mat-icon>
+              </button>
+              <button mat-icon-button color="primary" title="Modifica dati" 
+                      (click)="modificaPersonale(persona)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" title="Elimina" 
+                      (click)="eliminaPersonale(persona.id!)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          
+        </mat-table>
+      </div>
+    </mat-tab>
+
+    <!-- Tab Camerieri -->
+    <mat-tab label="Camerieri ({{ camerieri.length }})">
+      <div class="tab-content">
+        <mat-table [dataSource]="camerieri" class="personale-table">
+          
+          <!-- Stesse colonne dei cuochi -->
+          <ng-container matColumnDef="nome">
+            <mat-header-cell *matHeaderCellDef>Nome</mat-header-cell>
+            <mat-cell *matCellDef="let persona">{{ persona.nome }}</mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="cognome">
+            <mat-header-cell *matHeaderCellDef>Cognome</mat-header-cell>
+            <mat-cell *matCellDef="let persona">{{ persona.cognome }}</mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="username">
+            <mat-header-cell *matHeaderCellDef>Username</mat-header-cell>
+            <mat-cell *matCellDef="let persona">{{ persona.username }}</mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="password">
+            <mat-header-cell *matHeaderCellDef>Password</mat-header-cell>
+            <mat-cell *matCellDef="let persona">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-family: 'Fira Mono', monospace; letter-spacing: 2px;">
+                  <ng-container *ngIf="!persona._showPassword">{{ persona.password ? '*'.repeat(persona.password.length) : '' }}</ng-container>
+                  <ng-container *ngIf="persona._showPassword">{{ persona.password }}</ng-container>
+                </span>
+                <button mat-icon-button type="button" (click)="persona._showPassword = !persona._showPassword" [matTooltip]="persona._showPassword ? 'Nascondi password' : 'Mostra password'">
+                  <mat-icon>{{ persona._showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+              </div>
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="email">
+            <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
+            <mat-cell *matCellDef="let persona">{{ persona.email }}</mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="dataNascita">
+            <mat-header-cell *matHeaderCellDef>Data Nascita</mat-header-cell>
+            <mat-cell *matCellDef="let persona">{{ formatDate(persona.dataNascita) }}</mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="stato">
+            <mat-header-cell *matHeaderCellDef>Stato</mat-header-cell>
+            <mat-cell *matCellDef="let persona">
+              <mat-chip [color]="persona.bloccato ? 'warn' : 'primary'">
+                {{ persona.bloccato ? 'Bloccato' : 'Attivo' }}
+              </mat-chip>
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef>Azioni</mat-header-cell>
+            <mat-cell *matCellDef="let persona">
+              <button mat-icon-button 
+                      [color]="persona.bloccato ? 'primary' : 'warn'"
+                      [matTooltip]="persona.bloccato ? 'Sblocca personale' : 'Blocca personale'"
+                      (click)="cambiaStatoPersonale(persona)">
+                <mat-icon>{{ persona.bloccato ? 'lock_open' : 'lock' }}</mat-icon>
+              </button>
+              <button mat-icon-button color="primary" title="Modifica dati" 
+                      (click)="modificaPersonale(persona)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" title="Elimina" 
+                      (click)="eliminaPersonale(persona.id!)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          
+        </mat-table>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

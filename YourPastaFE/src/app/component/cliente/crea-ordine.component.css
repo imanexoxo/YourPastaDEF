@@ -1,0 +1,933 @@
+.crea-ordine-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.progress-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.carrello-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f5f5f5;
+  padding: 8px 16px;
+  border-radius: 20px;
+}
+
+.prezzo-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.prezzo {
+  font-weight: 500;
+  color: #2e7d32;
+}
+
+.prezzo-scontato {
+  font-size: 1.1em;
+  color: #1976d2;
+}
+
+.prezzo-originale {
+  font-size: 0.8em;
+  color: #666;
+  text-decoration: line-through;
+}
+
+.sconto-badge {
+  font-size: 0.7em;
+  background-color: #f57c00;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+/* Stepper Progress con tema rosso/beige */
+.stepper-progress {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  background: linear-gradient(135deg, #e5d4bd 0%, #efebe9 100%);
+  padding: 20px;
+  border-radius: 16px;
+  overflow-x: auto;
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.1);
+}
+
+.step-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+  padding: 15px 10px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  opacity: 0.6;
+  position: relative;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.step-indicator.active {
+  opacity: 1;
+  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(211, 47, 47, 0.3);
+}
+
+.step-indicator.completed {
+  opacity: 1;
+  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+}
+
+.step-indicator.clickable {
+  cursor: pointer;
+  border: 2px dashed #d32f2f;
+  opacity: 0.8;
+  background: rgba(211, 47, 47, 0.1);
+}
+
+.step-indicator.clickable:hover {
+  opacity: 1;
+  background: linear-gradient(135deg, #ffcdd2 0%, #ffebee 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(211, 47, 47, 0.2);
+}
+
+.bevande-shortcut {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulse 2s infinite;
+  box-shadow: 0 2px 8px rgba(211, 47, 47, 0.4);
+}
+
+.shortcut-icon {
+  font-size: 12px !important;
+  color: white;
+  line-height: 1;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(211, 47, 47, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); }
+}
+
+.step-indicator mat-icon {
+  margin-bottom: 8px;
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+
+.step-indicator span {
+  font-size: 0.8em;
+  text-align: center;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Loading */
+.loading-section {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.loading-spinner {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  animation: spin 2s linear infinite;
+  color: #1976d2;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Step Content con design migliorato */
+.step-content {
+  min-height: 400px;
+  margin-bottom: 30px;
+}
+
+.step-header {
+  margin-bottom: 30px;
+  padding: 20px 0;
+}
+
+.step-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #d32f2f;
+  margin-bottom: 10px;
+  font-weight: 600;
+  font-size: 1.3rem;
+}
+
+.step-header p {
+  color: #333;
+  margin: 8px 0;
+  font-size: 1rem;
+}
+
+.required-notice {
+  color: #d32f2f !important;
+  font-style: italic;
+  margin: 0;
+  font-weight: 500;
+  background: rgba(211, 47, 47, 0.1);
+  padding: 8px 12px;
+  border-radius: 6px;
+  border-left: 4px solid #d32f2f;
+}
+
+.no-items {
+  text-align: center;
+  padding: 60px 20px;
+  color: #d32f2f;
+  background: linear-gradient(135deg, #ffebee 0%, #fce4ec 100%);
+  border: 2px dashed #d32f2f;
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+.no-items mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+  color: #ff5722;
+}
+
+/* Ingredienti Grid */
+.ingredienti-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  padding: 20px;
+}
+
+/* Nuove Card Ingredienti senza bordi */
+.ingrediente-card {
+  background: transparent;
+  border-radius: 20px;
+  padding: 16px;
+  transition: all 0.3s ease;
+  border: none;
+  box-shadow: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.ingrediente-card:hover {
+  transform: translateY(-8px);
+  background: transparent;
+  box-shadow: 0 12px 32px rgba(211, 47, 47, 0.2);
+}
+
+.ingrediente-card.unavailable {
+  opacity: 0.5;
+  background: transparent;
+}
+
+.ingrediente-card .card-image {
+  width: 100%;
+  height: 180px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  background: transparent;
+  box-shadow: none;
+  transition: all 0.3s ease;
+}
+
+.ingrediente-card .card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+}
+
+.ingrediente-card .card-content {
+  text-align: center;
+  background: transparent;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.ingrediente-card .ingrediente-nome {
+  font-size: 1.2em;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.ingrediente-card .ingrediente-prezzo {
+  font-size: 1.3em;
+  font-weight: 800;
+  color: #d32f2f;
+  margin: 0 0 16px 0;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.ingrediente-card .quantity-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+  border-radius: 30px;
+  padding: 12px 20px;
+  margin-top: 16px;
+  box-shadow: 0 4px 16px rgba(211, 47, 47, 0.3);
+}
+
+.ingrediente-card .quantity-controls button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.ingrediente-card .quantity-controls button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.ingrediente-card .quantity-controls button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.ingrediente-card .quantity-display {
+  font-size: 1.2em;
+  font-weight: 600;
+  color: white;
+  min-width: 30px;
+  text-align: center;
+}
+
+.ingrediente-card .unavailable-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #666;
+  font-style: italic;
+  margin-top: 16px;
+  background: transparent;
+  border-radius: 20px;
+  padding: 8px 16px;
+}
+
+.ingrediente-card .unavailable-message mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: #999;
+}
+
+/* CSS Material Override per coerenza tema rosso */
+::ng-deep .ingrediente-card .mat-mdc-icon-button {
+  --mdc-icon-button-state-layer-size: 36px;
+  --mdc-icon-button-icon-size: 20px;
+}
+
+::ng-deep .ingrediente-card .mat-mdc-icon-button .mat-mdc-button-touch-target {
+  width: 36px;
+  height: 36px;
+}
+
+/* Riepilogo ordine con separazione piatti/bevande */
+.ordine-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  border-radius: 12px;
+  border: 2px solid;
+}
+
+.piatti-section {
+  border-color: #4caf50;
+  background-color: #f1f8e9;
+}
+
+.bevande-section {
+  border-color: #2196f3;
+  background-color: #e3f2fd;
+}
+
+.ordine-info {
+  margin-bottom: 15px;
+}
+
+.info-badge {
+  display: inline-block;
+  background-color: rgba(0,0,0,0.1);
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.85em;
+  font-weight: 500;
+}
+
+.subtotale {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(0,0,0,0.1);
+  text-align: right;
+}
+
+.totale-generale {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+}
+
+.totale-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.ordini-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9em;
+  color: #666;
+  background-color: #fff3e0;
+  padding: 10px;
+  border-radius: 6px;
+  border-left: 4px solid #ff9800;
+}
+.riepilogo-section {
+  margin-bottom: 40px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.riepilogo-section h4 {
+  color: #333;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.carrello-vuoto {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.carrello-vuoto mat-icon {
+  font-size: 36px;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 12px;
+}
+
+.carrello-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.carrello-item {
+  display: grid;
+  grid-template-columns: 2fr 1fr 80px 100px;
+  gap: 16px;
+  padding: 12px;
+  background-color: white;
+  border-radius: 4px;
+  align-items: center;
+}
+
+.carrello-item .categoria {
+  color: #666;
+  font-style: italic;
+}
+
+.carrello-item .quantita {
+  text-align: center;
+  font-weight: 500;
+}
+
+.carrello-item .prezzo {
+  text-align: right;
+  font-weight: 500;
+  color: #2e7d32;
+}
+
+.totale {
+  margin-top: 16px;
+  padding: 16px;
+  background-color: #e8f5e8;
+  border-radius: 4px;
+  text-align: right;
+  font-size: 1.2em;
+  color: #2e7d32;
+}
+
+.sconto-info {
+  margin-bottom: 8px;
+  font-size: 0.9em;
+}
+
+.sconto-info .prezzo-originale {
+  color: #666;
+  text-decoration: line-through;
+}
+
+.sconto-info .sconto-applicato {
+  color: #f57c00;
+  font-weight: 500;
+}
+
+/* Tavoli */
+.tavoli-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
+}
+
+.tavolo-card {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.tavolo-card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.tavolo-card.selected {
+  border-color: #1976d2;
+  background-color: #e3f2fd;
+}
+
+.tavolo-card mat-card-content {
+  text-align: center;
+  padding: 20px;
+}
+
+.tavolo-card mat-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+  margin-bottom: 8px;
+  color: #1976d2;
+}
+
+.no-tavoli {
+  text-align: center;
+  padding: 40px 20px;
+  color: #f57c00;
+}
+
+.no-tavoli mat-icon {
+  font-size: 36px;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 12px;
+}
+
+/* Note Field */
+.note-field {
+  width: 100%;
+}
+
+/* Navigation Sections */
+.navigation-section, .navigation-section-top, .navigation-section-steps, .navigation-section-global {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  margin-bottom: 20px;
+}
+
+.navigation-section {
+  border-top: 1px solid #d32f2f;
+  padding-top: 20px;
+}
+
+.navigation-section-top, .navigation-section-steps {
+  padding: 20px;
+  margin-top: 30px;
+}
+
+.navigation-section-global {
+  padding: 20px 0;
+  margin-bottom: 30px;
+}
+
+.navigation-right {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Pulsanti rossi uniformi */
+.btn-rosso, .navigation-section button[mat-raised-button] {
+  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 12px 24px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+.btn-rosso:hover:not(:disabled), .navigation-section button[mat-raised-button]:hover:not(:disabled) {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(211, 47, 47, 0.4) !important;
+  background: linear-gradient(135deg, #e53935 0%, #c62828 100%) !important;
+}
+
+.btn-rosso:disabled, .navigation-section button[mat-raised-button]:disabled {
+  opacity: 0.6 !important;
+  transform: none !important;
+  cursor: not-allowed !important;
+}
+
+/* Pulsanti secondari */
+.navigation-section button[mat-button] {
+  color: #d32f2f !important;
+  border: 2px solid #d32f2f !important;
+  border-radius: 8px !important;
+  padding: 10px 20px !important;
+  font-weight: 500 !important;
+  text-transform: none !important;
+  transition: all 0.3s ease !important;
+}
+
+.navigation-section button[mat-button]:hover:not(:disabled) {
+  background: #d32f2f !important;
+  color: white !important;
+  transform: translateY(-1px) !important;
+}
+
+.navigation-section button[mat-button]:disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+}
+
+/* Riepilogo Card con tema rosso/beige */
+.riepilogo-card {
+  background: linear-gradient(135deg, #e5d4bd 0%, #efebe9 100%) !important;
+  border: 2px solid #d32f2f !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 24px rgba(211, 47, 47, 0.15) !important;
+  overflow: hidden !important;
+  margin-top: 20px;
+}
+
+.riepilogo-card mat-card-header {
+  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%) !important;
+  color: white !important;
+  padding: 20px !important;
+  margin: 0 !important;
+}
+
+.riepilogo-card mat-card-title {
+  color: white !important;
+  font-size: 1.3rem !important;
+  font-weight: 600 !important;
+  margin: 0 !important;
+}
+
+.riepilogo-card mat-card-content {
+  padding: 24px !important;
+  background: transparent !important;
+}
+
+.empty-selection {
+  text-align: center;
+  padding: 40px 20px;
+  color: #d32f2f;
+}
+
+.empty-selection mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+  color: #ff5722;
+}
+
+.riepilogo-categoria h5 {
+  color: #d32f2f;
+  font-weight: 600;
+  margin: 20px 0 12px 0;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.riepilogo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  margin: 4px 0;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+  border-left: 4px solid #d32f2f;
+}
+
+.riepilogo-item .nome {
+  font-weight: 500;
+  color: #333;
+  flex: 1;
+}
+
+.riepilogo-item .quantita {
+  color: #d32f2f;
+  font-weight: 600;
+  margin: 0 16px;
+}
+
+.riepilogo-item .prezzo {
+  color: #d32f2f;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.prezzo-totale {
+  margin-top: 20px;
+  padding: 16px;
+  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+  color: white;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.prezzo-totale h4 {
+  margin: 0 0 20px 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+/* Azioni piatto sotto il totale */
+.azioni-piatto {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.azioni-piatto .btn-secondary {
+  background: linear-gradient(135deg, #757575 0%, #424242 100%) !important;
+  order: 1;
+}
+
+.azioni-piatto .btn-primary {
+  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%) !important;
+  order: 2;
+  font-size: 1.1rem !important;
+  padding: 14px 28px !important;
+}
+
+.azioni-piatto .btn-secondary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #616161 0%, #212121 100%) !important;
+}
+
+.azioni-piatto .btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #66bb6a 0%, #388e3c 100%) !important;
+}
+
+/* Campo nome piatto personalizzato */
+.nome-piatto-section {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  border: 2px solid #d32f2f;
+}
+
+.nome-piatto-field {
+  width: 100%;
+}
+
+/* Stili per Mat Form Field con tema rosso */
+::ng-deep .nome-piatto-field .mat-mdc-form-field-outline {
+  color: #d32f2f !important;
+}
+
+::ng-deep .nome-piatto-field .mat-mdc-form-field-outline-thick {
+  color: #d32f2f !important;
+}
+
+::ng-deep .nome-piatto-field .mat-mdc-floating-label {
+  color: #d32f2f !important;
+}
+
+::ng-deep .nome-piatto-field .mat-mdc-form-field-hint {
+  color: #666 !important;
+}
+
+::ng-deep .nome-piatto-field .mat-mdc-form-field-icon-suffix {
+  color: #d32f2f !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .crea-ordine-container {
+    padding: 10px;
+  }
+  
+  .header-section {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+  
+  .stepper-progress {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .step-indicator {
+    min-width: 60px;
+  }
+  
+  .ingredienti-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .carrello-item {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 8px;
+  }
+  
+  .tavoli-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .navigation-section, .navigation-section-top, .navigation-section-steps, .navigation-section-global {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .navigation-right {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .riepilogo-item {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+
+  .riepilogo-item .nome,
+  .riepilogo-item .quantita,
+  .riepilogo-item .prezzo {
+    margin: 0;
+  }
+
+  .azioni-piatto {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .azioni-piatto .btn-rosso {
+    width: 100%;
+    min-width: 200px;
+  }
+}
+
+/* Stili per la visualizzazione prezzi studenti */
+.prezzo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.prezzo-originale {
+  font-size: 0.9rem;
+  color: #888;
+  text-decoration: line-through;
+  font-weight: 400;
+}
+
+.prezzo-scontato {
+  font-size: 1.1rem;
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.totale-studente {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.totale-originale {
+  font-size: 1rem;
+  color: #666;
+  text-decoration: line-through;
+  font-weight: 400;
+  margin: 0;
+}
+
+.totale-scontato {
+  font-size: 1.3rem;
+  color: #2e7d32;
+  font-weight: bold;
+  margin: 0;
+}

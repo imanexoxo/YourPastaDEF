@@ -1,0 +1,569 @@
+
+/* Layout principale */
+.app-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header con logo e hamburger */
+.app-header {
+  background: #d32f2f;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 0 16px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 1000;
+  position: relative;
+}
+
+/* Spazio a sinistra con pulsante Home */
+.header-left {
+  width: 200px; /* Uguale alla larghezza approssimativa delle azioni */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.home-button {
+  background: #b71c1c;
+  color: white;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(183, 28, 28, 0.3);
+}
+
+.home-button:hover {
+  background: #8e0000;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(183, 28, 28, 0.4);
+}
+
+.home-button mat-icon {
+  color: white;
+  font-size: 24px;
+}
+
+/* Logo centrato */
+.logo-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.logo-center h1 {
+  margin: 0;
+  cursor: pointer;
+  color: white;
+  font-weight: 600;
+  font-size: 1.5rem;
+  transition: color 0.3s ease;
+}
+
+.logo-center h1:hover {
+  color: #f5f5f5;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Menu di autenticazione */
+.auth-menu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Pulsanti di autenticazione */
+.login-button {
+  color: white !important;
+  border: 2px solid white !important;
+  background: transparent !important;
+  font-weight: 500;
+  padding: 8px 20px;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  text-transform: none;
+  font-size: 0.9rem;
+}
+
+.login-button:hover {
+  background: white !important;
+  color: #d32f2f !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+}
+
+.register-button {
+  background: white !important;
+  color: #d32f2f !important;
+  font-weight: 600;
+  padding: 8px 20px;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
+  text-transform: none;
+  font-size: 0.9rem;
+  border: 2px solid white !important;
+}
+
+.register-button:hover {
+  background: #f5f5f5 !important;
+  color: #b71c1c !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.4);
+}
+
+/* Pulsante Ordina Adesso nell'header */
+.ordina-adesso-header {
+  background: #d32f2f !important;
+  color: white !important;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(211, 47, 47, 0.3);
+  text-transform: none;
+  font-size: 0.9rem;
+  margin-right: 8px;
+}
+
+.ordina-adesso-header:hover {
+  background: #b71c1c !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.4);
+}
+
+.ordina-adesso-header mat-icon {
+  color: white;
+  font-size: 18px;
+  margin-right: 6px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.user-name {
+  font-weight: 500;
+  color: white;
+  font-size: 0.95rem;
+}
+
+.user-points {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  color: white;
+  font-weight: 500;
+}
+
+.user-points mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  color: #ffd700;
+}
+
+/* Pulsante hamburger */
+.menu-toggle {
+  background: #b71c1c;
+  color: white;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.menu-toggle:hover {
+  background: #8e0000;
+  transform: scale(1.05);
+}
+
+.menu-toggle.active {
+  background: #8e0000;
+  transform: rotate(180deg);
+}
+
+/* Overlay per chiudere il menu */
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, rgba(211, 47, 47, 0.2), rgba(0, 0, 0, 0.5));
+  z-index: 1500;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(2px);
+}
+
+.menu-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Menu laterale scorrevole */
+.slide-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 320px;
+  height: 100vh;
+  background: linear-gradient(180deg, #fff 0%, #fafafa 100%);
+  box-shadow: -8px 0 32px rgba(211, 47, 47, 0.3);
+  z-index: 2000;
+  transform: translateX(100%);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  border-left: 3px solid #d32f2f;
+}
+
+.slide-menu.open {
+  transform: translateX(0);
+  box-shadow: -12px 0 48px rgba(211, 47, 47, 0.4);
+}
+
+/* Header del menu */
+.menu-header {
+  background: linear-gradient(135deg, #d32f2f 0%, #c62828 50%, #b71c1c 100%);
+  color: white;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 64px;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+
+.menu-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+  animation: shine 3s ease-in-out infinite;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+  100% { transform: translateX(100%); }
+}
+
+.menu-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.menu-header button {
+  color: white;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.menu-header button:hover {
+  background: rgba(255,255,255,0.2);
+  transform: rotate(90deg) scale(1.1);
+}
+
+/* Contenuto del menu */
+.menu-content {
+  flex: 1;
+  padding: 24px 20px;
+  overflow-y: auto;
+  background: linear-gradient(180deg, #fff 0%, #f8f9fa 100%);
+}
+
+.menu-section {
+  margin-bottom: 24px;
+}
+
+.menu-section:last-child {
+  margin-bottom: 0;
+}
+
+.menu-section h4 {
+  color: #d32f2f;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  padding: 12px 16px 12px 0;
+  border-bottom: 3px solid #d32f2f;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  background: linear-gradient(90deg, rgba(211, 47, 47, 0.1) 0%, transparent 70%);
+  border-radius: 8px 0 0 8px;
+}
+
+.menu-section h4::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #d32f2f 0%, #ff6b6b 100%);
+  border-radius: 2px;
+}
+
+.menu-section button {
+  width: 100%;
+  justify-content: flex-start;
+  text-align: left;
+  margin-bottom: 8px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 500;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.menu-section button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(211, 47, 47, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.menu-section button:hover::before {
+  left: 100%;
+}
+
+.menu-section button mat-icon {
+  margin-right: 14px;
+  color: #d32f2f;
+  transition: all 0.3s ease;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.menu-section button:hover {
+  background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+  transform: translateX(8px) scale(1.02);
+  border-color: #d32f2f;
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.2);
+}
+
+.menu-section button:hover mat-icon {
+  color: #b71c1c;
+  transform: scale(1.1);
+}
+
+.menu-section button[color="primary"] {
+  background: linear-gradient(135deg, #d32f2f 0%, #c62828 50%, #b71c1c 100%);
+  color: white;
+  font-weight: 600;
+  border-color: #d32f2f;
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+}
+
+.menu-section button[color="primary"]:hover {
+  background: linear-gradient(135deg, #c62828 0%, #b71c1c 50%, #8e0000 100%);
+  transform: translateX(8px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(211, 47, 47, 0.4);
+}
+
+.menu-section button[color="primary"] mat-icon {
+  color: white;
+}
+
+.menu-section button[color="primary"]:hover mat-icon {
+  color: white;
+  transform: scale(1.2);
+}
+
+.menu-section button[color="primary"] mat-icon {
+  color: white;
+}
+
+/* Contenuto principale */
+.main-content {
+  flex: 1;
+  overflow: auto;
+  background: #e5d4bd;
+  padding: 0;
+}
+
+/* Bottone fisso Carrello */
+.carrello-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #d32f2f !important;
+  color: white !important;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(211, 47, 47, 0.4);
+  transition: all 0.3s ease;
+}
+
+.carrello-fab:hover {
+  background: #b71c1c !important;
+  transform: scale(1.1);
+  box-shadow: 0 6px 25px rgba(211, 47, 47, 0.6);
+}
+
+.carrello-fab mat-icon {
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .slide-menu {
+    width: 100%;
+    max-width: 320px;
+  }
+  
+  .auth-menu {
+    gap: 8px;
+  }
+  
+  .login-button,
+  .register-button {
+    padding: 6px 16px;
+    font-size: 0.875rem;
+    border-radius: 20px;
+  }
+  
+  .ordina-adesso-header {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+    margin-right: 4px;
+  }
+  
+  .ordina-adesso-header mat-icon {
+    font-size: 16px;
+    margin-right: 4px;
+  }
+  
+  .user-name {
+    display: none;
+  }
+
+  .user-points {
+    font-size: 0.8rem;
+  }
+
+  .user-details {
+    align-items: center;
+  }
+
+  .header-left {
+    width: 120px;
+  }
+
+  .home-button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .home-button mat-icon {
+    font-size: 20px;
+  }
+
+  .ordina-ora-fab {
+    bottom: 16px;
+    right: 16px;
+    transform: scale(0.9);
+  }
+}
+
+@media (max-width: 480px) {
+  .app-header {
+    padding: 0 12px;
+  }
+  
+  .logo-center h1 {
+    font-size: 1.25rem;
+  }
+  
+  .menu-content {
+    padding: 16px;
+  }
+  
+  .slide-menu {
+    width: 100vw;
+  }
+
+  .header-left {
+    width: 80px;
+  }
+
+  .home-button {
+    width: 36px;
+    height: 36px;
+  }
+
+  .home-button mat-icon {
+    font-size: 18px;
+  }
+  
+  .login-button,
+  .register-button {
+    font-size: 0.75rem;
+    padding: 4px 12px;
+    border-radius: 18px;
+  }
+
+  .ordina-adesso-header {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    margin-right: 2px;
+  }
+  
+  .ordina-adesso-header mat-icon {
+    font-size: 14px;
+    margin-right: 2px;
+  }
+
+  .carrello-fab {
+    bottom: 12px;
+    right: 12px;
+    transform: scale(0.8);
+  }
+}

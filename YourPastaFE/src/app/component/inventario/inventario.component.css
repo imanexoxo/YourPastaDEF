@@ -1,0 +1,528 @@
+.inventario-container {
+  padding: 20px;
+}
+
+/* Assicura scroll fluido per tutta la pagina */
+html {
+  scroll-behavior: smooth;
+}
+
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.menu-title-clickable {
+  cursor: pointer;
+  transition: color 0.3s ease;
+  color: #d32f2f;
+}
+
+.menu-title-clickable:hover {
+  color: #b71c1c;
+  text-decoration: underline;
+}
+
+/* Stile rosso per il filtro categoria - versione aggiornata */
+.filtro-categoria {
+  min-width: 200px;
+}
+
+/* Admin header section */
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 16px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.admin-header h3 {
+  margin: 0;
+  color: #1976d2;
+  font-weight: 500;
+}
+
+.add-product-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Stili per snackbar personalizzati */
+::ng-deep .success-snackbar {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+::ng-deep .error-snackbar {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+
+/* Stili per i tooltip nella tabella */
+.mat-icon-button {
+  margin: 0 2px;
+}
+
+/* Stili per Material Design moderno */
+::ng-deep .filtro-categoria .mat-mdc-form-field {
+  color: #d32f2f !important;
+}
+
+::ng-deep .filtro-categoria .mdc-notched-outline__leading,
+::ng-deep .filtro-categoria .mdc-notched-outline__notch,
+::ng-deep .filtro-categoria .mdc-notched-outline__trailing {
+  border-color: #d32f2f !important;
+}
+
+::ng-deep .filtro-categoria.mdc-text-field--focused .mdc-notched-outline__leading,
+::ng-deep .filtro-categoria.mdc-text-field--focused .mdc-notched-outline__notch,
+::ng-deep .filtro-categoria.mdc-text-field--focused .mdc-notched-outline__trailing {
+  border-color: #d32f2f !important;
+  border-width: 2px !important;
+}
+
+::ng-deep .filtro-categoria .mdc-floating-label {
+  color: #d32f2f !important;
+}
+
+::ng-deep .filtro-categoria.mdc-text-field--focused .mdc-floating-label {
+  color: #d32f2f !important;
+}
+
+::ng-deep .filtro-categoria .mat-mdc-select-arrow {
+  color: #d32f2f !important;
+}
+
+::ng-deep .filtro-categoria .mat-mdc-select-value {
+  color: #d32f2f !important;
+}
+
+::ng-deep .filtro-categoria .mat-mdc-select-trigger {
+  color: #d32f2f !important;
+}
+
+/* Stili legacy per compatibilità */
+::ng-deep .filtro-categoria .mat-form-field-outline {
+  color: #d32f2f !important;
+}
+
+::ng-deep .filtro-categoria .mat-form-field-outline-thick {
+  color: #d32f2f !important;
+}
+
+::ng-deep .filtro-categoria .mat-form-field-label {
+  color: #d32f2f !important;
+}
+
+::ng-deep .filtro-categoria.mat-focused .mat-form-field-label {
+  color: #d32f2f !important;
+}
+
+::ng-deep .filtro-categoria .mat-select-arrow {
+  color: #d32f2f !important;
+}
+
+::ng-deep .filtro-categoria.mat-focused .mat-form-field-outline-thick {
+  color: #d32f2f !important;
+}
+
+::ng-deep .filtro-categoria .mat-select-value {
+  color: #d32f2f !important;
+}
+
+/* Stili aggiuntivi per dropdown panel */
+::ng-deep .mat-select-panel,
+::ng-deep .mat-mdc-select-panel {
+  background: white !important;
+}
+
+::ng-deep .mat-option,
+::ng-deep .mat-mdc-option {
+  color: #333 !important;
+}
+
+::ng-deep .mat-option:hover,
+::ng-deep .mat-mdc-option:hover {
+  background-color: #ffebee !important;
+  color: #d32f2f !important;
+}
+
+::ng-deep .mat-option.mat-selected,
+::ng-deep .mat-mdc-option.mdc-list-item--selected {
+  background-color: #d32f2f !important;
+  color: white !important;
+}
+
+::ng-deep .mat-option.mat-selected:hover,
+::ng-deep .mat-mdc-option.mdc-list-item--selected:hover {
+  background-color: #b71c1c !important;
+  color: white !important;
+}
+
+/* Outline specifico per il componente filtro */
+::ng-deep .filtro-categoria .mat-form-field-outline-start,
+::ng-deep .filtro-categoria .mat-form-field-outline-gap,
+::ng-deep .filtro-categoria .mat-form-field-outline-end {
+  border-color: #d32f2f !important;
+}
+
+::ng-deep .filtro-categoria.mat-focused .mat-form-field-outline-start,
+::ng-deep .filtro-categoria.mat-focused .mat-form-field-outline-gap,
+::ng-deep .filtro-categoria.mat-focused .mat-form-field-outline-end {
+  border-color: #d32f2f !important;
+  border-width: 2px !important;
+}
+
+/* Vista admin - tabella */
+.admin-view {
+  width: 100%;
+}
+
+.table-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.ingredienti-table {
+  width: 100%;
+  margin-top: 20px;
+}
+
+/* Vista client - cards */
+.client-view {
+  width: 100%;
+}
+
+.client-view .mat-card-title {
+  color: white;
+  font-weight: 600;
+}
+
+.client-view .mat-card-subtitle {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.client-view .mat-card-content {
+  color: white;
+}
+
+.client-view .mat-card-header {
+  background: transparent;
+}
+
+.client-view .mat-card-actions {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.client-view .mat-card-actions button {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.client-view .mat-card-actions button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.ingredienti-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.ingrediente-card {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+}
+
+.ingrediente-card:hover {
+  box-shadow: 0 8px 25px rgba(211, 47, 47, 0.4);
+  transform: translateY(-4px);
+}
+
+.card-image {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.ingrediente-card:hover .card-image img {
+  transform: scale(1.05);
+}
+
+.description {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  margin-bottom: 15px;
+  line-height: 1.4;
+  min-height: 40px;
+}
+
+.price-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  background: rgba(0, 0, 0, 0.1);
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.price {
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+}
+
+/* Stati disponibilità */
+.disponibile {
+  color: #c8e6c9;
+  font-weight: 500;
+  background: rgba(76, 175, 80, 0.2);
+  padding: 4px 8px;
+  border-radius: 12px;
+  border: 1px solid rgba(76, 175, 80, 0.4);
+}
+
+.non-disponibile {
+  color: #ffcdd2;
+  font-weight: 500;
+  background: rgba(244, 67, 54, 0.2);
+  padding: 4px 8px;
+  border-radius: 12px;
+  border: 1px solid rgba(244, 67, 54, 0.4);
+}
+
+/* Vista dettaglio */
+.dettaglio-view {
+  width: 100%;
+}
+
+.dettaglio-header {
+  margin-bottom: 20px;
+}
+
+.dettaglio-header button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  background: #fff;
+  color: #d32f2f;
+  border: 1px solid #d32f2f;
+}
+
+.dettaglio-header button:hover {
+  background: linear-gradient(135deg, #ffebee 0%, #fce4ec 100%);
+  transform: translateX(-4px);
+  color: #b71c1c;
+}
+
+.dettaglio-header button mat-icon {
+  transition: transform 0.3s ease;
+  color: #d32f2f;
+}
+
+.dettaglio-header button:hover mat-icon {
+  transform: translateX(-2px);
+  color: #b71c1c;
+}
+
+.dettaglio-card {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  color: #333;
+  border-radius: 15px;
+  border: 3px solid #d32f2f;
+  box-shadow: 0 8px 25px rgba(211, 47, 47, 0.2);
+}
+
+.dettaglio-container {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.dettaglio-info-section {
+  flex: 1;
+}
+
+.dettaglio-image-section {
+  flex: 0 0 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.dettaglio-image {
+  width: 280px;
+  height: 280px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f8f9fa;
+  border: 2px solid #d32f2f;
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.dettaglio-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+}
+
+.dettaglio-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.info-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+  color: #333;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-item strong {
+  color: #d32f2f;
+  font-weight: 600;
+}
+
+.non-disponibile-alert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(244, 67, 54, 0.1);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #d32f2f;
+  color: #d32f2f !important;
+  font-weight: 500;
+}
+
+.non-disponibile-alert mat-icon {
+  color: #d32f2f;
+}
+
+.dettaglio-card .mat-mdc-card-header {
+  background: transparent;
+  border-bottom: 2px solid #d32f2f;
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.dettaglio-card .mat-mdc-card-title {
+  color: #d32f2f;
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+
+.dettaglio-card .mat-mdc-card-subtitle {
+  color: #666;
+  font-size: 1rem;
+  text-transform: capitalize;
+}
+
+.dettaglio-card .mat-mdc-card-content {
+  color: #333;
+}
+
+.dettaglio-card .mat-mdc-card-actions {
+  background: #f8f9fa;
+  padding: 16px;
+  border-top: 1px solid #eee;
+}
+
+.dettaglio-card .mat-mdc-card-actions button {
+  margin-right: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .ingredienti-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .filtro-categoria {
+    width: 100%;
+  }
+
+
+  /* Responsive per vista dettaglio */
+  .dettaglio-container {
+    flex-direction: column;
+    gap: 20px;
+    padding: 15px;
+  }
+
+  .dettaglio-image-section {
+    flex: none;
+    order: -1;
+    align-self: center;
+    width: 100%;
+  display: flex;
+  justify-content: center;
+    padding: 10px;
+}
+
+  .dettaglio-image {
+    width: 250px;
+    height: 250px;
+    margin: 0 auto;
+}
+
+  .dettaglio-card {
+    margin: 0 10px;
+}
+
+    .dettaglio-header {
+      margin: 0 10px 20px 10px;
+}
+}

@@ -1,0 +1,442 @@
+.carrello-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+  min-height: 70vh;
+}
+
+/* Header Card con tema rosso/beige */
+.header-card {
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+  color: white;
+}
+
+.header-card mat-card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: white;
+}
+
+.header-card mat-card-subtitle {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Carrello Vuoto con tema */
+.empty-cart-card {
+  text-align: center;
+  padding: 40px;
+  margin-top: 40px;
+  background: linear-gradient(135deg, #e5d4bd 0%, #efebe9 100%);
+  border: 2px solid #d32f2f;
+}
+
+.empty-cart-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.empty-cart-icon {
+  font-size: 60px;
+  width: 60px;
+  height: 60px;
+  color: #d32f2f;
+}
+
+.empty-cart-content h2 {
+  color: #d32f2f;
+  margin: 0;
+  font-weight: 600;
+}
+
+.empty-cart-text {
+  font-size: 1.2em;
+  color: #666;
+  margin: 16px 0;
+}
+
+.continue-shopping-btn {
+  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%) !important;
+  color: white !important;
+  padding: 12px 24px;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.continue-shopping-btn:hover {
+  background: linear-gradient(135deg, #c62828 0%, #a00d0d 100%) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(211, 47, 47, 0.3);
+}
+
+.empty-cart-content button {
+  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%) !important;
+  color: white !important;
+}
+
+/* Item del Carrello con tema */
+.item-card {
+  transition: box-shadow 0.3s ease;
+  border: 1px solid #e5d4bd;
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+}
+
+.item-card:hover {
+  box-shadow: 0 6px 16px rgba(211, 47, 47, 0.15);
+  border-color: #d32f2f;
+}
+
+.item-layout {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  align-items: start;
+}
+
+/* Dettagli Item */
+.item-details {
+  flex: 1;
+}
+
+.item-name {
+  margin: 0 0 6px 0;
+  font-size: 1.2em;
+  font-weight: 600;
+  color: #d32f2f;
+}
+
+.item-description {
+  color: #666;
+  margin: 0 0 10px 0;
+  font-size: 0.95em;
+  line-height: 1.4;
+}
+
+/* Nuova sezione ingredienti */
+/* Sezione Ingredienti compatta */
+.ingredienti-section {
+  margin: 8px 0 12px 0;
+  padding: 10px;
+  background: rgba(229, 212, 189, 0.1);
+  border: 1px solid rgba(211, 47, 47, 0.1);
+  border-radius: 8px;
+}
+
+.ingredienti-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-size: 0.9em;
+  font-weight: 600;
+  color: #d32f2f;
+}
+
+.ingredienti-header mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.ingredienti-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ingrediente-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid #d32f2f;
+  border-radius: 20px;
+  padding: 4px 8px;
+  font-size: 0.8em;
+  transition: all 0.2s ease;
+}
+
+.ingrediente-chip:hover {
+  background: rgba(211, 47, 47, 0.1);
+  transform: translateY(-1px);
+}
+
+.ingrediente-nome {
+  font-weight: 500;
+  color: #333;
+}
+
+.ingrediente-quantita {
+  color: #d32f2f;
+  font-weight: 600;
+  font-size: 0.85em;
+}
+
+/* Info Categoria */
+.piatto-info, .bevanda-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9em;
+  color: #d32f2f;
+  font-weight: 500;
+  margin: 4px 0 8px 0;
+}
+
+.piatto-info mat-icon, .bevanda-info mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+/* Controlli Item con tema */
+.item-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  min-width: 180px;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #e5d4bd 0%, #efebe9 100%);
+  border: 2px solid #d32f2f;
+  border-radius: 20px;
+  padding: 4px;
+}
+
+.quantity-controls button {
+  background: rgba(211, 47, 47, 0.1) !important;
+  color: #d32f2f !important;
+}
+
+.quantity-controls button:hover:not(:disabled) {
+  background: rgba(211, 47, 47, 0.2) !important;
+}
+
+.quantity-display {
+  min-width: 30px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.1em;
+  color: #d32f2f;
+}
+
+.price-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.unit-price {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.total-price {
+  font-size: 1.2em;
+  font-weight: 600;
+  color: #d32f2f;
+}
+
+.item-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.item-actions button[color="warn"] {
+  background: rgba(244, 67, 54, 0.1) !important;
+  color: #f44336 !important;
+}
+
+/* Summary Card */
+.summary-card {
+  background: linear-gradient(135deg, #e5d4bd 0%, #efebe9 100%);
+  border: 2px solid #d32f2f;
+  box-shadow: 0 8px 16px rgba(211, 47, 47, 0.1);
+}
+
+.summary-card h3 {
+  margin: 0 0 16px 0;
+  color: #d32f2f;
+  font-weight: 600;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 1em;
+}
+
+.discount-row {
+  color: #28a745;
+  font-weight: 500;
+}
+
+.discount-row mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  margin-right: 4px;
+}
+
+.discount-amount {
+  font-weight: 600;
+}
+
+.total-row {
+  font-size: 1.2em;
+  font-weight: 600;
+  color: #d32f2f;
+  border-top: 2px solid rgba(211, 47, 47, 0.2);
+  padding-top: 12px;
+  margin-top: 8px;
+}
+
+.total-label {
+  font-size: 1.3em;
+  color: #d32f2f;
+}
+
+.total-amount {
+  font-size: 1.4em;
+  color: #d32f2f;
+  font-weight: 700;
+}
+
+/* Azioni Carrello con tema */
+.cart-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.secondary-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.checkout-button {
+  padding: 12px 24px;
+  font-size: 1.1em;
+  font-weight: 600;
+  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%) !important;
+  color: white !important;
+  border: none !important;
+}
+
+.checkout-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #c62828 0%, #a00d0d 100%) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(211, 47, 47, 0.3);
+}
+
+.checkout-button[disabled] {
+  background: #ccc !important;
+  color: #666 !important;
+}
+
+/* Pulsanti secondari */
+.secondary-actions button {
+  background: rgba(211, 47, 47, 0.1) !important;
+  color: #d32f2f !important;
+  border: 1px solid rgba(211, 47, 47, 0.3) !important;
+}
+
+.secondary-actions button:hover:not(:disabled) {
+  background: rgba(211, 47, 47, 0.2) !important;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loading-spinner {
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .carrello-container {
+    padding: 12px;
+  }
+  
+  .item-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    gap: 12px;
+  }
+  
+  .item-controls {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .secondary-actions {
+    flex-direction: column;
+  }
+  
+  .secondary-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .item-layout {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  
+  .price-info {
+    align-items: center;
+  }
+}
+
+/* Stili per la visualizzazione prezzi scontati nel carrello */
+.prezzo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.prezzo-originale {
+  font-size: 0.9rem;
+  color: #888;
+  text-decoration: line-through;
+  font-weight: 400;
+}
+
+.prezzo-scontato {
+  font-size: 1.2rem;
+  color: #2e7d32;
+  font-weight: bold;
+}

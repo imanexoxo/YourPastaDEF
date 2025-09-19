@@ -1,0 +1,211 @@
+<div class="inventario-container">
+  
+  <!-- Vista lista ingredienti -->
+  <div *ngIf="!modalitaDettaglio">
+    <div class="header-section">
+      <h2 (click)="navigaAMenuCompleto()" class="menu-title-clickable">Menu{{ categoria ? ' - ' + getCategoriaDisplayName() : '' }}</h2>
+      
+      <!-- Filtro per categoria -->
+      <mat-form-field appearance="outline" class="filtro-categoria">
+        <mat-label>Filtra per categoria</mat-label>
+        <mat-select [(value)]="categoria" (selectionChange)="filtraPerCategoria($event.value)">
+          <mat-option *ngFor="let cat of categorie" [value]="cat.valore">
+            {{ cat.nome }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- Tabella ingredienti per admin -->
+    <div *ngIf="isAdmin()" class="admin-view">
+      <!-- Header con bottone aggiungi -->
+      <div class="admin-header">
+        <h3>Gestione Inventario</h3>
+        <button mat-raised-button 
+                color="primary" 
+                (click)="apriDialogAggiungiProdotto()"
+                class="add-product-button">
+          <mat-icon>add</mat-icon>
+          Aggiungi Prodotto
+        </button>
+      </div>
+
+      <mat-table [dataSource]="ingredienti" class="ingredienti-table">
+        
+        <!-- Colonna Immagine -->
+        <ng-container matColumnDef="immagine">
+          <mat-header-cell *matHeaderCellDef>Immagine</mat-header-cell>
+          <mat-cell *matCellDef="let ingrediente">
+            <img [src]="getImageForIngredient(ingrediente)" 
+                 [alt]="ingrediente.nome"
+                 class="table-image"
+                 (error)="onImageError($event)">
+          </mat-cell>
+        </ng-container>
+
+        <!-- Colonna Nome -->
+        <ng-container matColumnDef="nome">
+          <mat-header-cell *matHeaderCellDef>Nome</mat-header-cell>
+          <mat-cell *matCellDef="let ingrediente">{{ ingrediente.nome }}</mat-cell>
+        </ng-container>
+
+        <!-- Colonna Categoria -->
+        <ng-container matColumnDef="categoria">
+          <mat-header-cell *matHeaderCellDef>Categoria</mat-header-cell>
+          <mat-cell *matCellDef="let ingrediente">{{ ingrediente.categoria }}</mat-cell>
+        </ng-container>
+
+        <!-- Colonna Quantità -->
+        <ng-container matColumnDef="quantita">
+          <mat-header-cell *matHeaderCellDef>Quantità</mat-header-cell>
+          <mat-cell *matCellDef="let ingrediente">{{ ingrediente.quantita }}</mat-cell>
+        </ng-container>
+
+        <!-- Colonna Prezzo -->
+        <ng-container matColumnDef="prezzoUnitario">
+          <mat-header-cell *matHeaderCellDef>Prezzo (€)</mat-header-cell>
+          <mat-cell *matCellDef="let ingrediente">{{ ingrediente.prezzoUnitario | currency:'EUR' }}</mat-cell>
+        </ng-container>
+
+        <!-- Colonna Azioni -->
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef>Azioni</mat-header-cell>
+          <mat-cell *matCellDef="let ingrediente">
+            <button mat-icon-button 
+                    (click)="mostraDettaglio(ingrediente)"
+                    matTooltip="Visualizza dettagli">
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <button mat-icon-button 
+                    color="primary"
+                    (click)="apriDialogModificaProdotto(ingrediente)"
+                    matTooltip="Modifica prodotto">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button 
+                    color="warn" 
+                    (click)="eliminaIngrediente(ingrediente.id!)"
+                    matTooltip="Elimina prodotto">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        
+      </mat-table>
+    </div>
+
+    <!-- Vista card per clienti -->
+    <div *ngIf="!isAdmin()" class="client-view">
+      <!-- Messaggio semplice per bevande -->
+      <div *ngIf="categoria === 'bevande'" style="text-align: center; margin-bottom: 30px; padding: 20px;">
+        <h3 style="color: #d32f2f; margin: 0 0 8px 0; font-size: 1.5rem; font-weight: 600;">
+          Aggiungi delle bevande al tuo ordine
+        </h3>
+        <p style="margin: 0; color: #666; font-size: 1.1rem;">
+          Seleziona le bevande che desideri aggiungere al carrello
+        </p>
+      </div>
+
+      <div class="ingredienti-grid">
+        <app-card-ingrediente 
+          *ngFor="let ingrediente of ingredienti" 
+          [ingrediente]="ingrediente"
+          [showActions]="true"
+          [showAddToCart]="categoria === 'bevande'"
+          [clickable]="true"
+          (cardClick)="mostraDettaglio($event)"
+          (dettagliClick)="mostraDettaglio($event)"
+          (aggiungiCarrello)="aggiungiBevandaAlCarrello($event)">
+        </app-card-ingrediente>
+      </div>
+
+      <!-- Pulsanti azione per bevande -->
+      <div *ngIf="categoria === 'bevande'" class="bevande-actions">
+        <button mat-button (click)="tornaAllaHome()">
+          <mat-icon>home</mat-icon>
+          Torna alla Home
+        </button>
+        
+        <button mat-raised-button color="primary" (click)="vaiAlCarrello()">
+          <mat-icon>shopping_cart</mat-icon>
+          Vai al Carrello
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vista dettaglio ingrediente -->
+  <div *ngIf="modalitaDettaglio && ingredienteSelezionato" class="dettaglio-view">
+    <div class="dettaglio-header">
+      <button mat-button (click)="tornaAllaLista()">
+        <mat-icon>arrow_back</mat-icon>
+        Torna alla lista
+      </button>
+    </div>
+
+    <mat-card class="dettaglio-card">
+      <div class="dettaglio-container">
+        <!-- Sezione sinistra con informazioni -->
+        <div class="dettaglio-info-section">
+      <mat-card-header>
+        <mat-card-title>{{ ingredienteSelezionato.nome }}</mat-card-title>
+        <mat-card-subtitle>{{ ingredienteSelezionato.categoria }}</mat-card-subtitle>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <div class="dettaglio-info">
+          <div class="info-item">
+            <strong>ID:</strong> {{ ingredienteSelezionato.id }}
+          </div>
+          <div class="info-item">
+            <strong>Nome:</strong> {{ ingredienteSelezionato.nome }}
+          </div>
+          <div class="info-item">
+            <strong>Categoria:</strong> {{ ingredienteSelezionato.categoria }}
+          </div>
+          <div class="info-item">
+            <strong>Quantità disponibile:</strong> {{ ingredienteSelezionato.quantita }}
+          </div>
+          <div class="info-item">
+            <strong>Prezzo unitario:</strong> {{ ingredienteSelezionato.prezzoUnitario | currency:'EUR' }}
+          </div>
+              <!-- Mostra solo se non disponibile -->
+              <div *ngIf="ingredienteSelezionato.quantita === 0" class="info-item non-disponibile-alert">
+                <mat-icon>warning</mat-icon>
+                <span>Prodotto non disponibile al momento</span>
+          </div>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions *ngIf="isAdmin()">
+        <button mat-raised-button 
+                color="primary" 
+                (click)="apriDialogModificaProdotto(ingredienteSelezionato)">
+          <mat-icon>edit</mat-icon>
+          Modifica
+        </button>
+        <button mat-raised-button 
+                color="warn" 
+                (click)="eliminaIngrediente(ingredienteSelezionato.id!)">
+          <mat-icon>delete</mat-icon>
+          Elimina
+        </button>
+      </mat-card-actions>
+        </div>
+
+        <!-- Sezione destra con immagine -->
+        <div class="dettaglio-image-section">
+          <div class="dettaglio-image">
+            <img [src]="getImageForIngredient(ingredienteSelezionato)" 
+                 [alt]="ingredienteSelezionato.nome"
+                 (error)="onImageError($event)">
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+
+</div>

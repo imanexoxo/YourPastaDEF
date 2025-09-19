@@ -1,0 +1,87 @@
+<div class="signin-container">
+  <h2>Registrazione</h2>
+  
+  <form (ngSubmit)="registra()" #signinForm="ngForm" class="signin-form">
+    
+
+    <!-- Nome -->
+    <mat-form-field appearance="outline">
+      <mat-label>Nome</mat-label>
+      <input matInput [(ngModel)]="nuovoUtente.nome" name="nome" required>
+    </mat-form-field>
+
+    <!-- Cognome -->
+    <mat-form-field appearance="outline">
+      <mat-label>Cognome</mat-label>
+      <input matInput [(ngModel)]="nuovoUtente.cognome" name="cognome" required>
+    </mat-form-field>
+
+    <!-- Username -->
+    <mat-form-field appearance="outline">
+      <mat-label>Username</mat-label>
+      <input matInput [(ngModel)]="nuovoUtente.username" name="username" required>
+    </mat-form-field>
+
+    <!-- Ruolo (prima della mail) -->
+    <mat-form-field appearance="outline">
+      <mat-label>Tipo di account</mat-label>
+      <mat-select [(ngModel)]="nuovoUtente.ruolo" name="ruolo">
+        <mat-option value="cliente">Cliente</mat-option>
+        <mat-option value="studente">Studente</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Email -->
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" [(ngModel)]="nuovoUtente.email" name="email" required>
+    </mat-form-field>
+    <div *ngIf="nuovoUtente.ruolo === 'studente'" class="email-warning" style="color: #1976d2; font-size: 0.98em; margin-bottom: 12px; margin-top: -8px;">
+      * aggiungere la propria mail istituzionale
+    </div>
+
+    <!-- Data di nascita -->
+    <mat-form-field appearance="outline">
+      <mat-label>Data di nascita</mat-label>
+      <input matInput [matDatepicker]="picker" [(ngModel)]="nuovoUtente.dataNascita" name="dataNascita" required>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+
+    <!-- Password -->
+    <mat-form-field appearance="outline">
+      <mat-label>Password</mat-label>
+      <input matInput type="password" [(ngModel)]="nuovoUtente.password" name="password" required>
+    </mat-form-field>
+
+    <!-- Conferma Password -->
+    <mat-form-field appearance="outline">
+      <mat-label>Conferma Password</mat-label>
+      <input matInput type="password" [(ngModel)]="confermaPassword" name="confermaPassword" required>
+    </mat-form-field>
+
+    <!-- Messaggi di errore e successo -->
+    <div *ngIf="errore" class="error-message">
+      {{ errore }}
+    </div>
+    
+    <div *ngIf="successo" class="success-message">
+      {{ successo }}
+    </div>
+
+    <!-- Bottoni -->
+    <div class="form-actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="!signinForm.form.valid">
+        Registrati
+      </button>
+      <button mat-button type="button" (click)="clearForm()">
+        Pulisci
+      </button>
+      <button mat-button routerLink="/login" type="button">
+        Hai già un account? Accedi
+      </button>
+    </div>
+
+  </form>
+</div>

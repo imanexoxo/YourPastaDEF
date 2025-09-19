@@ -1,0 +1,456 @@
+<div class="home-container">
+  
+  <!-- Sezione di benvenuto -->
+  <div class="welcome-section">
+    <h1>🍝 Benvenuto in YourPasta</h1>
+    
+    <div *ngIf="utenteLoggato; else welcomeGuest" class="user-welcome">
+      <h2>{{ getSaluto() }}, {{ utenteLoggato.nome }}!</h2>
+      <p>È un piacere rivederti. Cosa desideri fare oggi?</p>
+    </div>
+    
+    <ng-template #welcomeGuest>
+      <div class="guest-welcome">
+        <h2>{{ getSaluto() }}!</h2>
+        <p>Scopri il nostro menu di pasta personalizzata. Crea il tuo piatto perfetto!</p>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- Sezione preview categorie - Solo per non autenticati, clienti e studenti -->
+  <div *ngIf="!utenteLoggato || utenteLoggato.ruolo === 'cliente' || utenteLoggato.ruolo === 'studente'" class="categories-preview">
+    <!-- Pulsante Scopri il Menù -->
+    <div class="menu-discovery-section">
+      <button mat-raised-button 
+              (click)="scopriMenu()" 
+              class="menu-discovery-button red-button"
+              matTooltip="Esplora tutti i nostri prodotti">
+        <mat-icon>restaurant_menu</mat-icon>
+        Scopri il Menù Completo
+      </button>
+    </div>
+    
+    <!-- Le paste che ti consigliamo -->
+    <div class="category-section">
+      <div class="category-header">
+        <h3><mat-icon>restaurant</mat-icon> Le paste che ti consigliamo</h3>
+        <button mat-raised-button class="red-button" routerLink="/inventario/pasta">
+          <mat-icon>arrow_forward</mat-icon>
+          Scopri tutte le nostre paste
+        </button>
+      </div>
+      
+      <div class="suggested-products">
+        <div class="product-item" 
+             *ngFor="let prodotto of pasteConsigliate" 
+             routerLink="/inventario/pasta">
+          <div class="product-image-wrapper">
+            <img [src]="getImageById(prodotto.id || 1)" 
+                 [alt]="prodotto.nome"
+                 class="product-image"
+                 (error)="onImageError($event)">
+          </div>
+          <span class="product-name">{{ prodotto.nome }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gli abbinamenti da non perdere -->
+    <div class="category-section">
+      <div class="category-header">
+        <h3><mat-icon>local_dining</mat-icon> I condimenti da non perdere</h3>
+        <button mat-raised-button class="red-button" routerLink="/inventario/condimenti">
+          <mat-icon>arrow_forward</mat-icon>
+          Scopri tutti i nostri condimenti
+        </button>
+      </div>
+      
+      <div class="suggested-products">
+        <div class="product-item" 
+             *ngFor="let prodotto of abbinamenti" 
+             routerLink="/inventario/condimenti">
+          <div class="product-image-wrapper">
+            <img [src]="getImageById(prodotto.id || 1)" 
+                 [alt]="prodotto.nome"
+                 class="product-image"
+                 (error)="onImageError($event)">
+          </div>
+          <span class="product-name">{{ prodotto.nome }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Creazioni dei clienti - Solo per non autenticati -->
+    <div *ngIf="!utenteLoggato" class="category-section">
+      <div class="category-header">
+        <h3><mat-icon>restaurant_menu</mat-icon> Le creazioni dei nostri clienti</h3>
+        <button mat-raised-button class="red-button" (click)="navigateToTuttiPiatti()">
+          <mat-icon>arrow_forward</mat-icon>
+          Scopri tutte le creazioni
+        </button>
+      </div>
+      
+      <div class="piatti-list">
+        <div class="piatto-container" *ngFor="let piatto of creazioniAltriClienti" (click)="onPiattoClick(piatto)">
+          <!-- Immagini degli ingredienti seamless -->
+          <div class="ingredienti-images">
+            <img *ngFor="let immagine of getImmaginiIngredienti(piatto)" 
+                 [src]="immagine" 
+                 [alt]="'Ingrediente'"
+                 class="ingrediente-image">
+          </div>
+          
+          <!-- Card rossa del piatto -->
+          <mat-card class="piatto-card-red">
+            <mat-card-content>
+              <h4 class="piatto-nome">{{ piatto.nome }}</h4>
+              <p class="piatto-utente">by {{ getNomeUtenteCreatore(piatto) }}</p>
+              <div class="ingredienti-list">
+                <p *ngFor="let ingrediente of getNomiIngredienti(piatto)" class="ingrediente-item">
+                  {{ ingrediente }}
+                </p>
+              </div>
+              <div class="piatto-footer">
+                <p class="prezzo">
+                  <!-- Se è uno studente, mostra il prezzo originale barrato e quello scontato -->
+                  <span *ngIf="isUtenteStudente()" class="prezzo-container">
+                    <span class="prezzo-originale">€{{ getPrezzoOriginale(piatto) | number:'1.2-2' }}</span>
+                    <span class="prezzo-scontato">€{{ getPrezzoScontato(piatto) | number:'1.2-2' }}</span>
+                  </span>
+                  <!-- Se non è uno studente, mostra solo il prezzo normale -->
+                  <span *ngIf="!isUtenteStudente()">€{{ piatto.prezzo | number:'1.2-2' }}</span>
+                </p>
+                <div class="login-message">
+                  <p class="login-text">
+                    <a routerLink="/login" class="login-link">Accedi</a> 
+                    o 
+                    <a routerLink="/signin" class="login-link">registrati</a> 
+                    per ordinare
+                  </p>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+
+    <!-- Creazioni dell'utente - Solo per clienti/studenti loggati -->
+    <div *ngIf="utenteLoggato && (utenteLoggato.ruolo === 'cliente' || utenteLoggato.ruolo === 'studente')" class="category-section">
+      <div class="category-header">
+        <h3><mat-icon>restaurant_menu</mat-icon> Le tue creazioni</h3>
+        <button *ngIf="mieiPiatti && mieiPiatti.length > 0" 
+                mat-raised-button class="red-button" (click)="navigateToMieiPiatti()">
+          <mat-icon>arrow_forward</mat-icon>
+          Scopri tutte le tue creazioni
+        </button>
+      </div>
+      
+      <!-- Se ci sono piatti, mostra la lista -->
+      <div *ngIf="mieiPiatti && mieiPiatti.length > 0" class="piatti-list">
+        <div class="piatto-container" *ngFor="let piatto of mieiPiatti" (click)="onPiattoClick(piatto)">
+          <!-- Immagini degli ingredienti seamless -->
+          <div class="ingredienti-images">
+            <img *ngFor="let immagine of getImmaginiIngredienti(piatto)" 
+                 [src]="immagine" 
+                 [alt]="'Ingrediente'"
+                 class="ingrediente-image">
+          </div>
+          
+          <!-- Card rossa del piatto -->
+          <mat-card class="piatto-card-red">
+            <mat-card-content>
+              <h4 class="piatto-nome">{{ piatto.nome }}</h4>
+              <div class="ingredienti-list">
+                <p *ngFor="let ingrediente of getNomiIngredienti(piatto)" class="ingrediente-item">
+                  {{ ingrediente }}
+                </p>
+              </div>
+              <div class="piatto-footer">
+                <p class="prezzo">
+                  <!-- Se è uno studente, mostra il prezzo originale barrato e quello scontato -->
+                  <span *ngIf="isUtenteStudente()" class="prezzo-container">
+                    <span class="prezzo-originale">€{{ getPrezzoOriginale(piatto) | number:'1.2-2' }}</span>
+                    <span class="prezzo-scontato">€{{ getPrezzoScontato(piatto) | number:'1.2-2' }}</span>
+                  </span>
+                  <!-- Se non è uno studente, mostra solo il prezzo normale -->
+                  <span *ngIf="!isUtenteStudente()">€{{ piatto.prezzo | number:'1.2-2' }}</span>
+                </p>
+                <button mat-raised-button color="primary" (click)="aggiungiPiattoAlCarrello(piatto, $event)" class="add-to-cart-btn">
+                  <mat-icon>add_shopping_cart</mat-icon>
+                </button>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+      
+      <!-- Se non ci sono piatti, mostra messaggio e pulsante Ordina ora -->
+      <div *ngIf="!mieiPiatti || mieiPiatti.length === 0" class="no-dishes-message">
+        <p>Non hai ancora creato nulla</p>
+        <div class="ordina-ora-container">
+          <button mat-fab color="primary" class="ordina-ora-button" routerLink="/crea-ordine">
+            <mat-icon>add_shopping_cart</mat-icon>
+          </button>
+          <span class="ordina-ora-text">Ordina ora</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Creazioni di altri clienti - Solo per clienti/studenti loggati -->
+    <div *ngIf="utenteLoggato && (utenteLoggato.ruolo === 'cliente' || utenteLoggato.ruolo === 'studente')" class="category-section">
+      <div class="category-header">
+        <h3><mat-icon>group</mat-icon> Scopri le creazioni degli altri clienti</h3>
+        <button mat-raised-button class="red-button" (click)="navigateToAltriPiatti()">
+          <mat-icon>arrow_forward</mat-icon>
+          Scopri tutte le creazioni
+        </button>
+      </div>
+      
+      <div class="piatti-list">
+        <div class="piatto-container" *ngFor="let piatto of creazioniAltriClienti" (click)="onPiattoClick(piatto)">
+          <!-- Immagini degli ingredienti seamless -->
+          <div class="ingredienti-images">
+            <img *ngFor="let immagine of getImmaginiIngredienti(piatto)" 
+                 [src]="immagine" 
+                 [alt]="'Ingrediente'"
+                 class="ingrediente-image">
+          </div>
+          
+          <!-- Card rossa del piatto -->
+          <mat-card class="piatto-card-red">
+            <mat-card-content>
+              <h4 class="piatto-nome">{{ piatto.nome }}</h4>
+              <p class="piatto-utente">by {{ getNomeUtenteCreatore(piatto) }}</p>
+              <div class="ingredienti-list">
+                <p *ngFor="let ingrediente of getNomiIngredienti(piatto)" class="ingrediente-item">
+                  {{ ingrediente }}
+                </p>
+              </div>
+              <div class="piatto-footer">
+                <p class="prezzo">
+                  <!-- Se è uno studente, mostra il prezzo originale barrato e quello scontato -->
+                  <span *ngIf="isUtenteStudente()" class="prezzo-container">
+                    <span class="prezzo-originale">€{{ getPrezzoOriginale(piatto) | number:'1.2-2' }}</span>
+                    <span class="prezzo-scontato">€{{ getPrezzoScontato(piatto) | number:'1.2-2' }}</span>
+                  </span>
+                  <!-- Se non è uno studente, mostra solo il prezzo normale -->
+                  <span *ngIf="!isUtenteStudente()">€{{ piatto.prezzo | number:'1.2-2' }}</span>
+                </p>
+                <button mat-raised-button color="primary" (click)="aggiungiPiattoAlCarrello(piatto, $event)" class="add-to-cart-btn">
+                  <mat-icon>add_shopping_cart</mat-icon>
+                </button>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Azioni rapide in base al ruolo -->
+  <div class="quick-actions">
+    
+    <!-- Per utenti non loggati -->
+    <div *ngIf="!utenteLoggato" class="actions-section">
+      <div class="actions-grid-small">
+        <mat-card class="action-card-small" routerLink="/inventario/pasta">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>restaurant</mat-icon>
+            <mat-card-title>Esplora Menu</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            Scopri tutti i nostri ingredienti disponibili
+          </mat-card-content>
+        </mat-card>
+        
+        <mat-card class="action-card-small" routerLink="/login">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>person</mat-icon>
+            <mat-card-title>Accedi</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            Accedi per ordinare e gestire il tuo profilo
+          </mat-card-content>
+        </mat-card>
+        
+        <mat-card class="action-card-small" routerLink="/signin">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>person_add</mat-icon>
+            <mat-card-title>Registrati</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            Crea un account per ordinare i tuoi piatti
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Per clienti e studenti -->
+    <div *ngIf="utenteLoggato && (utenteLoggato.ruolo === 'cliente' || utenteLoggato.ruolo === 'studente')" class="actions-section">
+      <h3>Le tue azioni</h3>
+      <div class="actions-grid-small">
+        <mat-card class="action-card-small" routerLink="/inventario">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>restaurant_menu</mat-icon>
+            <mat-card-title>Menu</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            Esplora tutti gli ingredienti disponibili
+          </mat-card-content>
+        </mat-card>
+        
+        <mat-card class="action-card-small" routerLink="/crea-ordine">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>add_shopping_cart</mat-icon>
+            <mat-card-title>Ordina Ora</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            Crea il tuo piatto di pasta personalizzato
+          </mat-card-content>
+        </mat-card>
+        
+        <mat-card class="action-card-small" routerLink="/carrello">
+          <mat-card-header>
+            <mat-icon mat-card-avatar [matBadge]="getTotalItemsCarrello()" 
+                      [matBadgeHidden]="getTotalItemsCarrello() === 0"
+                      matBadgeColor="accent">shopping_cart</mat-icon>
+            <mat-card-title>Carrello</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div *ngIf="getTotalItemsCarrello() > 0; else emptyCart">
+              {{ getTotalItemsCarrello() }} item(s) - €{{ getPrezzoTotaleCarrello() | number:'1.2-2' }}
+            </div>
+            <ng-template #emptyCart>
+              Il tuo carrello è vuoto
+            </ng-template>
+          </mat-card-content>
+        </mat-card>
+        
+        <mat-card class="action-card-small" routerLink="/storico-ordini">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>history</mat-icon>
+            <mat-card-title>Storico Ordini</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            Visualizza i tuoi ordini precedenti
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Per amministratori -->
+    <div *ngIf="utenteLoggato && utenteLoggato.ruolo === 'admin'" class="actions-section">
+      <h3>Pannello Amministratore</h3>
+      <div class="actions-grid-small">
+        <mat-card class="action-card-small" routerLink="/gestione-clienti">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>group</mat-icon>
+            <mat-card-title>Gestisci Clienti</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            Visualizza e gestisci tutti i clienti
+          </mat-card-content>
+        </mat-card>
+        
+        <mat-card class="action-card-small" routerLink="/gestione-personale">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>badge</mat-icon>
+            <mat-card-title>Gestisci Personale</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            Gestisci cuochi e camerieri
+          </mat-card-content>
+        </mat-card>
+        
+        <mat-card class="action-card-small" routerLink="/inventario">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>inventory</mat-icon>
+            <mat-card-title>Inventario</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            Gestisci ingredienti e scorte
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- Per personale cucina -->
+    <div *ngIf="utenteLoggato && (utenteLoggato.ruolo === 'cuoco' || utenteLoggato.ruolo === 'cameriere')" class="actions-section">
+      <h3>Area Cucina</h3>
+      <div class="actions-grid-small">
+        <mat-card class="action-card-small" routerLink="/ordini-cucina">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>restaurant</mat-icon>
+            <mat-card-title>Ordini in Corso</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            Visualizza e gestisci gli ordini da preparare
+          </mat-card-content>
+        </mat-card>
+        
+        <mat-card class="action-card-small" routerLink="/gestione-tavoli">
+          <mat-card-header>
+            <mat-icon mat-card-avatar>table_restaurant</mat-icon>
+            <mat-card-title>Gestione Tavoli</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            Stato dei tavoli e prenotazioni
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sezione recensioni MagnaFrara - Solo per clienti e studenti -->
+  <div *ngIf="utenteLoggato && (utenteLoggato.ruolo === 'cliente' || utenteLoggato.ruolo === 'studente')" class="recensioni-section">
+    <div class="recensioni-container">
+      <button mat-raised-button class="recensioni-button" (click)="apriRecensioni()">
+        <mat-icon>grade</mat-icon>
+        Soddisfatto del nostro servizio? Lascia una recensione su MagnaFrara
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<footer class="app-footer">
+  <div class="footer-content">
+    <!-- Informazioni Ristorante -->
+    <div class="footer-section">
+      <h3>🍝 YourPasta</h3>
+      <p>Il tuo ristorante di pasta personalizzata</p>
+      <p>Crea il tuo piatto perfetto scegliendo tra pasta fresca, condimenti deliziosi, proteine di qualità e topping esclusivi.</p>
+    </div>
+
+    <!-- Menu Categorie -->
+    <div class="footer-section">
+      <h4>Menu</h4>
+      <div class="footer-links">
+        <a routerLink="/inventario/pasta">Pasta</a>
+        <a routerLink="/inventario/condimento_pronto">Condimenti</a>
+        <a routerLink="/inventario/proteine">Proteine</a>
+        <a routerLink="/inventario/ingrediente_base">Ingredienti</a>
+        <a routerLink="/inventario/topping">Topping</a>
+        <a routerLink="/inventario/bevande">Bevande</a>
+      </div>
+    </div>
+
+    <!-- Contatti -->
+    <div class="footer-section">
+      <h4>Contatti</h4>
+      <div class="footer-contacts">
+        <p><mat-icon>access_time</mat-icon> Lun-Dom 12:00-23:00</p>
+        <p><mat-icon>phone</mat-icon> +39 123 456 7890</p>
+        <p><mat-icon>email</mat-icon> info&#64;yourpasta.it</p>
+        <p><mat-icon>location_on</mat-icon> Via Roma 123, Ferrara</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Copyright -->
+  <div class="footer-bottom">
+    <p>&copy; 2025 YourPasta. Tutti i diritti riservati.</p>
+  </div>
+</footer>

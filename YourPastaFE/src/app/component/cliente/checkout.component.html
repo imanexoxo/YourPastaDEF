@@ -1,0 +1,240 @@
+<div class="checkout-container">
+  <div class="checkout-header">
+    <h1>
+      <mat-icon>payment</mat-icon>
+      Finalizza Ordine
+    </h1>
+    <p>Controlla i dettagli del tuo ordine e seleziona dove vuoi essere servito</p>
+  </div>
+
+  <div class="checkout-content">
+    <!-- COLONNA SINISTRA: Riepilogo Carrello -->
+    <div class="checkout-left">
+      <mat-card class="summary-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>shopping_cart</mat-icon>
+            Il Tuo Ordine ({{ carrello.numeroTotaleItem }} items)
+          </mat-card-title>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <!-- Items del carrello -->
+          <div class="order-items">
+            <div *ngFor="let item of carrello.items; let i = index" class="order-item">
+              <div class="item-info">
+                <h4 class="item-name">{{ getNomeItem(item) }}</h4>
+                <p *ngIf="getDescrizioneItem(item)" class="item-description">
+                  {{ getDescrizioneItem(item) }}
+                </p>
+                <div class="item-meta">
+                  <span class="quantity">Qtà: {{ item.quantita }}</span>
+                  <span class="unit-price">€{{ item.prezzoUnitario.toFixed(2) }} cad.</span>
+                </div>
+              </div>
+              <div class="item-total">
+                €{{ (item.prezzoUnitario * item.quantita).toFixed(2) }}
+              </div>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <!-- Calcolo Sconti -->
+          <div class="price-breakdown">
+            <div class="price-row">
+              <span>Subtotale</span>
+              <span>€{{ prezzoOriginale.toFixed(2) }}</span>
+            </div>
+
+            <!-- Sconti attivi -->
+            <div *ngIf="scontoStudente > 0" class="price-row discount-row">
+              <span>
+                <mat-icon>school</mat-icon>
+                Sconto Studente (20%)
+              </span>
+              <span>-€{{ scontoStudente.toFixed(2) }}</span>
+            </div>
+
+            <div *ngIf="scontoPunti > 0" class="price-row discount-row">
+              <span>
+                <mat-icon>stars</mat-icon>
+                Sconto Punti ({{ getPercentualeScoutoPunti() }}%)
+              </span>
+              <span>-€{{ scontoPunti.toFixed(2) }}</span>
+            </div>
+
+            <div *ngIf="scontoPrimoOrdine > 0" class="price-row discount-row">
+              <span>
+                <mat-icon>celebration</mat-icon>
+                Sconto Primo Ordine (10%)
+              </span>
+              <span>-€{{ scontoPrimoOrdine.toFixed(2) }}</span>
+            </div>
+
+            <mat-divider *ngIf="scontoTotale > 0"></mat-divider>
+
+            <div class="price-row total-row">
+              <span class="total-label">Totale{{ scontoTotale > 0 ? ' (con sconti)' : '' }}</span>
+              <span class="total-amount">
+                <!-- Se ci sono sconti, mostra prezzo originale barrato e finale -->
+                <span *ngIf="scontoTotale > 0" class="prezzo-container-checkout">
+                  <span class="prezzo-originale-checkout">€{{ prezzoOriginale.toFixed(2) }}</span>
+                  <span class="prezzo-finale-checkout">€{{ prezzoFinale.toFixed(2) }}</span>
+                </span>
+                <!-- Se non ci sono sconti, mostra solo il prezzo -->
+                <span *ngIf="scontoTotale === 0">€{{ prezzoFinale.toFixed(2) }}</span>
+              </span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Info Sconti -->
+      <mat-card *ngIf="getScontiAttivi().length > 0" class="discounts-info-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>local_offer</mat-icon>
+            Sconti Applicati
+          </mat-card-title>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div *ngFor="let sconto of getScontiAttivi()" class="discount-item">
+            <mat-icon>check_circle</mat-icon>
+            <span>{{ sconto }}</span>
+          </div>
+          
+          <div *ngIf="getPuntiDisponibili() > 0" class="punti-info">
+            <mat-icon>stars</mat-icon>
+            <span>
+              Utilizzi {{ getPuntiDisponibili() }} punti per questo sconto.
+              Punti rimanenti: {{ (utenteCorrente?.punti || 0) - getPuntiDisponibili() }}
+            </span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- COLONNA DESTRA: Dettagli Ordine -->
+    <div class="checkout-right">
+      <!-- Selezione Tavolo/Asporto -->
+      <mat-card class="selection-card">
+        <mat-card-header>
+          <mat-card-title>Dove vuoi essere servito?</mat-card-title>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <!-- Opzione Tavolo -->
+          <div class="service-option">
+            <h3>
+              <mat-icon>table_restaurant</mat-icon>
+              Servizio al Tavolo
+            </h3>
+            
+            <mat-form-field *ngIf="!isLoading" appearance="outline">
+              <mat-label>Seleziona Tavolo</mat-label>
+              <mat-select [(value)]="tavoloSelezionato" 
+                         (selectionChange)="onTavoloSelezionato($event.value)"
+                         [disabled]="isAsporto">
+                <mat-option *ngFor="let tavolo of tavoliDisponibili" [value]="tavolo">
+                  Tavolo {{ tavolo.id || 'N/A' }}
+                </mat-option>
+              </mat-select>
+              <mat-hint>Scegli un tavolo disponibile</mat-hint>
+            </mat-form-field>
+
+            <div *ngIf="isLoading" class="loading-tavoli">
+              <mat-spinner diameter="30"></mat-spinner>
+              <span>Caricamento tavoli...</span>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <!-- Opzione Asporto -->
+          <div class="service-option">
+            <h3>
+              <mat-icon>takeout_dining</mat-icon>
+              Asporto
+            </h3>
+            <button mat-raised-button 
+                    [color]="isAsporto && !isDelivery ? 'primary' : ''"
+                    (click)="onAsportoSelezionato()"
+                    class="asporto-button">
+              <mat-icon>shopping_bag</mat-icon>
+              Ordine da Asporto
+            </button>
+            <p class="asporto-note">
+              <mat-icon>info</mat-icon>
+              Il tuo ordine sarà preparato per il ritiro. 
+              Ti avviseremo quando sarà pronto!
+            </p>
+          </div>
+
+          <!-- Opzione Delivery -->
+          <div class="service-option">
+            <h3>
+              <mat-icon>local_shipping</mat-icon>
+              Delivery
+            </h3>
+            <button mat-raised-button 
+                    [color]="isDelivery ? 'primary' : ''"
+                    (click)="onDeliverySelezionato()"
+                    class="asporto-button">
+              <mat-icon>local_shipping</mat-icon>
+              Ordina con Delivery
+            </button>
+            <p class="asporto-note">
+              <mat-icon>info</mat-icon>
+              Il tuo ordine sarà consegnato a domicilio tramite servizio esterno.
+            </p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Note -->
+      <mat-card class="notes-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>note_add</mat-icon>
+            Note per la Cucina
+          </mat-card-title>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Note aggiuntive (opzionale)</mat-label>
+            <textarea matInput 
+                     [(ngModel)]="note"
+                     placeholder="Es: senza cipolla, cottura al dente, allergie..."
+                     rows="3"
+                     maxlength="500"></textarea>
+            <mat-hint align="end">{{ note.length }}/500</mat-hint>
+          </mat-form-field>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Azioni -->
+  <div class="checkout-actions">
+    <button mat-button 
+            (click)="tornaAlCarrello()"
+            [disabled]="isProcessingOrder"
+            class="back-button">
+      <mat-icon>arrow_back</mat-icon>
+      Torna al Carrello
+    </button>
+
+    <button mat-raised-button 
+            color="primary"
+            (click)="confermaOrdine()"
+            [disabled]="!isFormValid() || isProcessingOrder"
+            class="confirm-button">
+      <mat-spinner *ngIf="isProcessingOrder" diameter="20"></mat-spinner>
+      <mat-icon *ngIf="!isProcessingOrder">check</mat-icon>
+      {{ isProcessingOrder ? 'Elaborazione...' : 'Conferma Ordine' }}
+    </button>
+  </div>
+</div>

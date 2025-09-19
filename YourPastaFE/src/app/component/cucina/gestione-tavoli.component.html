@@ -1,0 +1,201 @@
+<div class="gestione-tavoli-container">
+  <!-- Header con statistiche -->
+  <div class="header-stats">
+    <h2>
+      <mat-icon>restaurant</mat-icon>
+      Gestione Tavoli
+    </h2>
+    
+    <div class="stats-cards">
+      <mat-card class="stat-card liberi">
+        <mat-card-content>
+          <div class="stat-value">{{ tavoliLiberi }}</div>
+          <div class="stat-label">Tavoli Liberi</div>
+        </mat-card-content>
+      </mat-card>
+      
+      <mat-card class="stat-card occupati">
+        <mat-card-content>
+          <div class="stat-value">{{ tavoliOccupati }}</div>
+          <div class="stat-label">Tavoli Occupati</div>
+        </mat-card-content>
+      </mat-card>
+      
+      <mat-card class="stat-card totali">
+        <mat-card-content>
+          <div class="stat-value">{{ tavoli.length }}</div>
+          <div class="stat-label">Totali</div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    
+    <button 
+      mat-icon-button
+      (click)="caricaTavoli()"
+      [disabled]="isLoading"
+      matTooltip="Aggiorna">
+      <mat-icon>refresh</mat-icon>
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner">
+      <mat-icon>hourglass_empty</mat-icon>
+      <p>Caricamento tavoli...</p>
+    </div>
+  </div>
+
+
+  <!-- Griglia tavoli -->
+  <div *ngIf="!isLoading" class="tavoli-grid">
+    <mat-card 
+      *ngFor="let tavolo of tavoli" 
+      class="tavolo-card"
+      [class.libero]="isTavoloLibero(tavolo)"
+      [class.occupato]="!isTavoloLibero(tavolo)"
+      [class.indisponibile]="!tavolo.disponibile">
+      
+
+      <!-- TAVOLO CARD -->
+      <!-- tavolo card header -->
+      <mat-card-header>
+        <div class="tavolo-numero">
+          <mat-icon 
+            [color]="isTavoloLibero(tavolo) ? 'primary' : 'warn'"
+            [matBadge]="getOrdiniAttivi(tavolo.id!).length"
+            [matBadgeHidden]="getOrdiniAttivi(tavolo.id!).length === 0"
+            matBadgeColor="accent">
+            table_restaurant
+          </mat-icon>
+          <span>Tavolo {{ tavolo.id }}</span>
+        </div>
+        
+        <div class="tavolo-status">
+          <mat-chip 
+            *ngIf="!tavolo.disponibile"
+            color="warn">
+            Indisponibile
+          </mat-chip>
+          <mat-chip 
+            *ngIf="tavolo.disponibile && isTavoloLibero(tavolo)"
+            color="primary">
+            Libero
+          </mat-chip>
+          <mat-chip 
+            *ngIf="tavolo.disponibile && !isTavoloLibero(tavolo)"
+            color="accent">
+            Occupato
+          </mat-chip>
+        </div>
+      </mat-card-header>
+
+      <!-- tavolo card content -->
+      <mat-card-content>
+        <!-- Ordini attivi -->
+        <div *ngIf="getOrdiniAttivi(tavolo.id!).length > 0" class="ordini-attivi">
+          <h4>Ordini Attivi</h4>
+          
+          <div *ngFor="let ordine of getOrdiniAttivi(tavolo.id!)" class="ordine-item">
+            
+            <div class="ordine-header">
+
+              <div *ngFor="let item of getOrdineItems(ordine.id!)">
+                <div *ngIf="item.tipoItem === 'PIATTO'">
+                  <h4>Piatto {{ getPiatto(item.itemId)?.id }}</h4>
+                  <!-- ingrediente è un piattoItem -->
+                  <span *ngFor="let ingrediente of piattoItemsPerPiatto[item.itemId]">
+                    {{ getIngrediente(ingrediente.ingredienteId)?.nome }}
+                    {{ ingrediente.quantita }}
+                  </span>
+                </div>
+                <div *ngIf="item.tipoItem === 'BEVANDA'">
+                  <h4>Bevanda</h4>
+                  <span>{{ ingredientiPerId[item.itemId].nome }}</span>
+                </div>
+              </div>
+
+              <mat-chip 
+                [style.background-color]="getStatoColor(ordine.status)"
+                class="stato-chip">
+                {{ ordine.status }}
+              </mat-chip>
+            </div>
+            
+            <div class="ordine-details">
+              <div class="ordine-time">
+                <mat-icon>schedule</mat-icon>
+                {{ formatTime(ordine.dataOrdine) }}
+              </div>
+              
+              <div class="ordine-prezzo">
+                <mat-icon>euro</mat-icon>
+                {{ ordine.prezzoTotale | currency:'EUR':'symbol':'1.2-2' }}
+              </div>
+            </div>
+            
+            <div *ngIf="ordine.carrello?.items?.length" class="ordine-items">
+              <div class="item-preview">
+                Ordine con {{ ordine.carrello?.items?.length || 0 }} items
+              </div>
+            </div>
+          </div>
+          
+          <div class="totale-tavolo">
+            <strong>
+              Totale: {{ getTotaleFatturato(tavolo.id!) | currency:'EUR':'symbol':'1.2-2' }}
+            </strong>
+          </div>
+        </div>
+
+        <!-- Tavolo vuoto -->
+        <div *ngIf="isTavoloLibero(tavolo) && tavolo.disponibile" class="tavolo-vuoto">
+          <mat-icon>event_seat</mat-icon>
+          <p>Tavolo disponibile</p>
+        </div>
+
+        <!-- Tavolo indisponibile -->
+        <div *ngIf="!tavolo.disponibile" class="tavolo-indisponibile">
+          <mat-icon>block</mat-icon>
+          <p>Tavolo non disponibile</p>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button 
+          *ngIf="tavolo.disponibile && !isTavoloLibero(tavolo)"
+          mat-button
+          color="warn"
+          (click)="liberaTavolo(tavolo)">
+          <mat-icon>receipt</mat-icon>
+          Libera Tavolo
+        </button>
+        
+        <button 
+          *ngIf="!tavolo.disponibile"
+          mat-button
+          color="primary"
+          (click)="cambiaDisponibilita(tavolo, true)">
+          <mat-icon>check</mat-icon>
+          Rendi Disponibile
+        </button>
+        
+        <button 
+          *ngIf="isTavoloLibero(tavolo) && tavolo.disponibile"
+          mat-button
+          color="accent"
+          (click)="cambiaDisponibilita(tavolo, false)">
+          <mat-icon>block</mat-icon>
+          Chiudi Tavolo
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <!-- Nessun tavolo -->
+  <div *ngIf="!isLoading && tavoli.length === 0" class="no-tavoli">
+    <mat-icon>restaurant</mat-icon>
+    <h3>Nessun tavolo configurato</h3>
+    <p>Configura i tavoli dal pannello amministratore</p>
+  </div>
+</div>

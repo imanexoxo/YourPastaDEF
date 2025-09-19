@@ -1,0 +1,438 @@
+/* Container principale */
+.piatti-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: calc(100vh - 64px);
+}
+
+/* Header della pagina */
+.header-section {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.header-section h2 {
+  color: #333;
+  font-weight: 600;
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.header-section mat-icon {
+  color: #d32f2f;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Loading section */
+.loading-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: 20px;
+}
+
+.loading-section p {
+  color: #666;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* ===== STILI PIATTI IDENTICI ALLA HOME ===== */
+
+/* Griglia piatti - AGGIORNATO COME HOME */
+.piatti-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 colonne fisse */
+  gap: 15px; /* Ridotto per dare più spazio alle card */
+  margin: 0 auto; /* Centro la griglia */
+  max-width: 1200px; /* Larghezza massima */
+  padding: 0 20px; /* Padding ai lati */
+  justify-items: center; /* Centro le card all'interno delle celle */
+}
+
+/* Container piatto - AGGIORNATO COME HOME */
+.piatto-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: none; /* Nessuna ombra di default */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  height: auto;
+  min-height: 380px; /* Ridotta per layout 3 colonne */
+  width: 100%;
+  cursor: pointer;
+}
+
+.piatto-container:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2); /* Ombra solo al hover */
+}
+
+/* Container per le immagini degli ingredienti - AGGIORNATO COME HOME */
+.ingredienti-images {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center; /* Centrate le immagini */
+  align-items: center;
+  background: #e5d4bd;
+  padding: 4px;
+  gap: 2px; /* Piccolo gap tra le immagini */
+  height: 80px; /* Aumentata leggermente l'altezza */
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-radius: 0; /* Nessun bordo arrotondato */
+}
+
+/* Scrollbar personalizzata per ingredienti */
+.ingredienti-images::-webkit-scrollbar {
+  height: 3px;
+}
+
+.ingredienti-images::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ingredienti-images::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+
+.ingredienti-images::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+/* Immagini ingredienti - AGGIORNATO COME HOME */
+.ingrediente-image {
+  width: 70px; /* Aumentate le dimensioni */
+  height: 70px;
+  object-fit: cover;
+  border: none; /* Nessun bordo */
+  border-radius: 0; /* Nessun border radius */
+  margin: 0; /* Nessun margine - completamente attaccate */
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+  min-width: 70px;
+}
+
+.ingrediente-image:hover {
+  transform: scale(1.05);
+  z-index: 1;
+}
+
+/* Card rossa del piatto - AGGIORNATO COME HOME */
+.piatto-card-red {
+  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%) !important;
+  color: white !important;
+  border-radius: 0 0 12px 12px !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  height: auto !important; /* Altezza automatica */
+  min-height: 310px !important; /* Altezza minima */
+  display: flex;
+  flex-direction: column;
+  border-top: none;
+  flex: 1; /* Occupa tutto lo spazio rimanente */
+}
+
+.piatto-card-red mat-card-content {
+  padding: 16px !important;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: auto; /* Altezza automatica */
+}
+
+.piatto-nome {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 4px 0; /* Ridotto per fare spazio all'username */
+  color: white;
+  text-align: center;
+  height: 32px; /* Ridotta per fare spazio all'username */
+  min-height: 32px; /* Altezza minima garantita */
+  max-height: 32px; /* Altezza massima garantita */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* Nasconde testo che non entra */
+  text-overflow: ellipsis; /* Aggiunge ... se troppo lungo */
+  white-space: nowrap; /* Non va a capo */
+}
+
+.piatto-utente {
+  font-size: 0.9rem;
+  font-style: italic;
+  margin: 0 0 8px 0;
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  height: 20px; /* Altezza fissa per l'username */
+  min-height: 20px;
+  max-height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ingredienti-list {
+  margin: 8px 0 12px 0;
+  flex: 1;
+  overflow-y: auto; /* Scrollbar se troppi ingredienti */
+  overflow-x: hidden;
+  padding-right: 8px;
+}
+
+/* Scrollbar per lista ingredienti */
+.ingredienti-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.ingredienti-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+.ingredienti-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+}
+
+.ingredienti-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.ingrediente-item {
+  font-size: 0.85rem;
+  margin: 4px 0;
+  color: #ffebee;
+  opacity: 0.9;
+  display: flex;
+  align-items: center;
+}
+
+.ingrediente-item::before {
+  content: "•";
+  color: #ffeb3b;
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-right: 8px;
+}
+
+.piatto-card-red .prezzo {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0;
+  color: white;
+}
+
+/* Footer della card con prezzo a sinistra e bottone a destra */
+.piatto-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin-top: auto; /* Sposta il footer in basso */
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.piatto-footer .prezzo {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
+}
+
+.add-to-cart-btn {
+  background-color: #fff !important;
+  color: #d32f2f !important;
+  font-size: 0.8rem !important;
+  min-width: 40px !important;
+  width: 40px !important;
+  height: 40px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.add-to-cart-btn:hover {
+  background-color: #f5f5f5 !important;
+  transform: scale(1.05);
+}
+
+.add-to-cart-btn mat-icon {
+  font-size: 20px !important;
+  width: 20px !important;
+  height: 20px !important;
+  margin: 0 !important;
+}
+
+/* Stili per il messaggio di login */
+.login-message {
+  flex: 1;
+  text-align: right;
+}
+
+.login-text {
+  font-size: 0.85em;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.login-link {
+  color: #ffd700;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.login-link:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+/* ===== FINE STILI PIATTI ===== */
+
+/* Messaggio nessun piatto */
+.no-piatti {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 300px;
+  gap: 16px;
+  color: #666;
+}
+
+.no-piatti mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: #d32f2f;
+  margin-bottom: 16px;
+}
+
+.no-piatti h3 {
+  color: #333;
+  font-weight: 600;
+  margin: 0;
+}
+
+.no-piatti p {
+  color: #666;
+  margin: 0 0 20px 0;
+  max-width: 400px;
+}
+
+.no-piatti button {
+  margin-top: 16px;
+}
+
+/* Layout responsive per piatti - AGGIORNATO COME HOME */
+@media (min-width: 768px) {
+  .piatti-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 colonne anche su desktop */
+    gap: 20px;
+  }
+
+  .piatto-container {
+    min-height: 420px; /* Aumentata per contenere tutto */
+  }
+
+  .ingredienti-images {
+    height: 80px; /* Mantengo la dimensione aumentata */
+    padding: 4px;
+  }
+
+  .ingrediente-image {
+    width: 75px; /* Leggermente più grandi su desktop */
+    height: 75px;
+    min-width: 75px;
+    border-radius: 0; /* Nessun bordo */
+    margin: 0;
+  }
+}
+
+/* Media query per tablet */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .piatti-list {
+    grid-template-columns: repeat(2, 1fr) !important; /* 2 colonne su tablet */
+    gap: 15px;
+  }
+  
+  .piatto-container {
+    min-height: 400px; /* Aumentata leggermente per contenere immagini più grandi */
+  }
+}
+
+@media (max-width: 768px) {
+  .piatto-container {
+    margin-bottom: 16px;
+    min-height: 350px; /* Altezza ridotta anche su mobile */
+  }
+
+  .piatti-list {
+    grid-template-columns: 1fr; /* Una colonna su mobile */
+    gap: 15px;
+    margin: 0 5px;
+  }
+
+  .ingredienti-images {
+    height: 65px; /* Aumentata anche per mobile */
+    padding: 4px;
+  }
+
+  .ingrediente-image {
+    width: 55px; /* Aumentate anche su mobile */
+    height: 55px;
+    min-width: 55px;
+  }
+
+  .piatto-card-red {
+    min-height: 300px !important;
+  }
+}
+
+/* Stili per la visualizzazione del prezzo con sconto studente */
+.prezzo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.prezzo-originale {
+  font-size: 0.9rem;
+  color: #ccc;
+  text-decoration: line-through;
+  font-weight: 400;
+}
+
+.prezzo-scontato {
+  font-size: 1.2rem;
+  color: white;
+  font-weight: bold;
+}

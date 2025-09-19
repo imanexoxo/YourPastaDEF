@@ -1,0 +1,189 @@
+<div class="app-container">
+  <!-- Header con menu hamburger -->
+  <header class="app-header">
+    <!-- Pulsante Home a sinistra (visibile solo fuori dalla home) -->
+    <div class="header-left">
+      <button *ngIf="!isHomePage()" 
+              mat-icon-button 
+              routerLink="/home" 
+              class="home-button"
+              matTooltip="Torna alla Home">
+        <mat-icon>home</mat-icon>
+      </button>
+    </div>
+
+    <!-- Logo/Titolo centrato -->
+    <div class="logo-center">
+      <h1 routerLink="/home">🍝 YourPasta</h1>
+    </div>
+
+    <!-- Menu di autenticazione e hamburger -->
+    <div class="header-actions">
+      <!-- Menu di autenticazione -->
+      <div class="auth-menu">
+        <div *ngIf="!utenteLoggato; else menuLoggato">
+          <button mat-button routerLink="/login" class="login-button">Login</button>
+          <button mat-raised-button routerLink="/signin" class="register-button">Registrati</button>
+        </div>
+        <ng-template #menuLoggato>
+          <div class="user-info">
+            <!-- Pulsante Ordina Adesso - Solo per clienti e studenti -->
+            <button *ngIf="utenteLoggato?.ruolo === 'cliente' || utenteLoggato?.ruolo === 'studente'"
+                    mat-raised-button 
+                    routerLink="/crea-ordine"
+                    class="ordina-adesso-header"
+                    matTooltip="Crea il tuo piatto personalizzato">
+              <mat-icon>add_shopping_cart</mat-icon>
+              Ordina Adesso
+            </button>
+            
+            <app-notification-center></app-notification-center>
+            <div class="user-details">
+              <span class="user-name">{{ utenteLoggato?.nome }}</span>
+              <span class="user-points" *ngIf="utenteLoggato?.punti !== undefined && (utenteLoggato?.ruolo === 'cliente' || utenteLoggato?.ruolo === 'studente')">
+                <mat-icon>stars</mat-icon> {{ utenteLoggato?.punti }} punti
+              </span>
+            </div>
+            <button mat-icon-button (click)="logout()" matTooltip="Logout">
+              <mat-icon>logout</mat-icon>
+            </button>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Pulsante menu hamburger -->
+      <button mat-icon-button 
+              class="menu-toggle" 
+              (click)="toggleMenu()" 
+              [class.active]="menuAperto"
+              matTooltip="Menu">
+        <mat-icon>{{ menuAperto ? 'close' : 'menu' }}</mat-icon>
+      </button>
+    </div>
+  </header>
+
+  <!-- Overlay per chiudere il menu -->
+  <div class="menu-overlay" 
+       [class.show]="menuAperto" 
+       (click)="closeMenu()"></div>
+
+  <!-- Menu laterale scorrevole -->
+  <nav class="slide-menu" [class.open]="menuAperto">
+    <div class="menu-header">
+      <h3>Menu Navigazione</h3>
+      <button mat-icon-button (click)="closeMenu()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="menu-content">
+      <!-- Menu per utenti non loggati -->
+      <div *ngIf="!utenteLoggato" class="menu-section">
+        <h4>Esplora</h4>
+        <button mat-button routerLink="/home" (click)="closeMenu()">
+          <mat-icon>home</mat-icon> Home
+        </button>
+        <button mat-button routerLink="/inventario/pasta" (click)="closeMenu()">
+          <mat-icon>restaurant</mat-icon> Pasta
+        </button>
+        <button mat-button routerLink="/inventario/condimento_pronto" (click)="closeMenu()">
+          <mat-icon>local_dining</mat-icon> Condimenti
+        </button>
+        <button mat-button routerLink="/inventario/proteine" (click)="closeMenu()">
+          <mat-icon>set_meal</mat-icon> Proteine
+        </button>
+        <button mat-button routerLink="/inventario/ingrediente_base" (click)="closeMenu()">
+          <mat-icon>eco</mat-icon> Ingredienti
+        </button>
+        <button mat-button routerLink="/inventario/topping" (click)="closeMenu()">
+          <mat-icon>add_circle</mat-icon> Topping
+        </button>
+        <button mat-button routerLink="/inventario/bevande" (click)="closeMenu()">
+          <mat-icon>local_bar</mat-icon> Bevande
+        </button>
+      </div>
+
+      <!-- Menu per clienti e studenti -->
+      <div *ngIf="utenteLoggato && (utenteLoggato.ruolo === 'cliente' || utenteLoggato.ruolo === 'studente')" class="menu-section">
+        <h4>Navigazione</h4>
+        <button mat-button routerLink="/home" (click)="closeMenu()">
+          <mat-icon>home</mat-icon> Home
+        </button>
+        <button mat-raised-button color="primary" routerLink="/crea-ordine" (click)="closeMenu()">
+          <mat-icon>add_shopping_cart</mat-icon> Ordina Ora
+        </button>
+        <button mat-button routerLink="/miei-piatti" (click)="closeMenu()">
+          <mat-icon>restaurant_menu</mat-icon> I miei piatti
+        </button>
+        <button mat-button routerLink="/storico-ordini" (click)="closeMenu()">
+          <mat-icon>history</mat-icon> Storico Ordini
+        </button>
+
+        <h4>Menu</h4>
+        <button mat-button routerLink="/inventario/pasta" (click)="closeMenu()">
+          <mat-icon>restaurant</mat-icon> Pasta
+        </button>
+        <button mat-button routerLink="/inventario/condimento_pronto" (click)="closeMenu()">
+          <mat-icon>local_dining</mat-icon> Condimenti
+        </button>
+        <button mat-button routerLink="/inventario/proteine" (click)="closeMenu()">
+          <mat-icon>set_meal</mat-icon> Proteine
+        </button>
+        <button mat-button routerLink="/inventario/ingrediente_base" (click)="closeMenu()">
+          <mat-icon>eco</mat-icon> Ingredienti
+        </button>
+        <button mat-button routerLink="/inventario/topping" (click)="closeMenu()">
+          <mat-icon>add_circle</mat-icon> Topping
+        </button>
+        <button mat-button routerLink="/inventario/bevande" (click)="closeMenu()">
+          <mat-icon>local_bar</mat-icon> Bevande
+        </button>
+      </div>
+
+      <!-- Menu per amministratori -->
+      <div *ngIf="utenteLoggato && utenteLoggato.ruolo === 'admin'" class="menu-section">
+        <h4>Amministrazione</h4>
+        <button mat-button routerLink="/home" (click)="closeMenu()">
+          <mat-icon>home</mat-icon> Home
+        </button>
+        <button mat-button routerLink="/gestione-clienti" (click)="closeMenu()">
+          <mat-icon>group</mat-icon> Gestisci Clienti
+        </button>
+        <button mat-button routerLink="/gestione-personale" (click)="closeMenu()">
+          <mat-icon>badge</mat-icon> Gestisci Personale
+        </button>
+        <button mat-button routerLink="/inventario" (click)="closeMenu()">
+          <mat-icon>inventory</mat-icon> Inventario
+        </button>
+      </div>
+
+      <!-- Menu per cucina (cuochi e camerieri) -->
+      <div *ngIf="utenteLoggato && (utenteLoggato.ruolo === 'cuoco' || utenteLoggato.ruolo === 'cameriere')" class="menu-section">
+        <h4>Area Cucina</h4>
+        <button mat-button routerLink="/home" (click)="closeMenu()">
+          <mat-icon>home</mat-icon> Home
+        </button>
+        <button mat-button routerLink="/ordini-cucina" (click)="closeMenu()">
+          <mat-icon>restaurant</mat-icon> Ordini
+        </button>
+        <button mat-button routerLink="/gestione-tavoli" (click)="closeMenu()">
+          <mat-icon>table_restaurant</mat-icon> Tavoli
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Contenuto principale -->
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Bottone fisso Carrello -->
+  <button *ngIf="utenteLoggato && (utenteLoggato.ruolo === 'cliente' || utenteLoggato.ruolo === 'studente')"
+          mat-fab 
+          class="carrello-fab"
+          routerLink="/carrello"
+          matTooltip="Vai al Carrello">
+    <mat-icon>shopping_cart</mat-icon>
+  </button>
+</div>
